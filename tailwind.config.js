@@ -3,7 +3,10 @@ export default {
   content: ["./src/**/*.{js,jsx,ts,tsx}",], theme: {
     extend: {
       colors: {
-        "orange": {'from': '#CE4B43', 'to': '#F1BE44'}, "blackcard": "#14181E"
+        "orange": {'from': '#CE4B43', 'to': '#F1BE44'}, "blackcard": "#14181E",
+        "purple-dark": "#1e1935",
+        "purple-light": "#4a117d",
+
       }, gridTemplateRows: {
         '8': 'repeat(8, minmax(0, 1fr))',
       }, backgroundImage: {

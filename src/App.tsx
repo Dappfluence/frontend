@@ -53,15 +53,15 @@ const App: React.FC<IProps> = ({queryClient}) => {
   });
 
 
-  return <div className={'w-[100vw] bg-white'}>
+  return <div className={'w-[100vw] bg-white relative'}>
     <QueryClientProvider client={queryClient}>
       <WagmiConfig client={wagmiClient}>
         <RainbowKitProvider chains={chains}>
           <ToastContainer position={'bottom-right'} theme={'dark'}/>
-          <div className={'lg:container mx-auto'}>
-            <Header/>
-            <RouterProvider router={router}/>
-          </div>
+
+          <Header/>
+          <RouterProvider router={router}/>
+
         </RainbowKitProvider>
       </WagmiConfig>
     </QueryClientProvider>
