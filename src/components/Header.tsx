@@ -1,13 +1,7 @@
-import React, {useMemo} from "react";
-import {ArrowPathIcon, ChevronRightIcon, LinkIcon} from "@heroicons/react/24/outline";
-import {Button} from "../elements/Button";
+import React from "react";
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 
 
-interface IButtonState {
-  element: React.ReactNode;
-  action: () => void;
-}
 
 const Header: React.FC = () => {
 

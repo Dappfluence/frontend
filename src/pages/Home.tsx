@@ -1,13 +1,12 @@
-import React, {useEffect} from "react";
+import React from "react";
 import {Game} from "../types";
 import GameTile from "../components/tiles/GameTile";
-import {useQuery} from "@tanstack/react-query";
 import {useGamesQuery} from "../api/games";
 
 
 const Home: React.FC = () => {
 
-	const {data: games = [], refetch} = useGamesQuery();
+	const {data: games = []} = useGamesQuery();
 
 
 	const renderGames = () => {

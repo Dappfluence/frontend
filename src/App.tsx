@@ -1,11 +1,11 @@
-import React, {useState} from 'react'
+import React from 'react'
 import {RouterProvider} from "react-router-dom";
 import router from "./router";
 import Header from "./components/Header";
 import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
 
 import {configureChains, createClient, mainnet, WagmiConfig} from 'wagmi';
-import {polygon, polygonMumbai} from "wagmi/chains"
+import {polygon} from "wagmi/chains"
 import { publicProvider } from 'wagmi/providers/public';
 import {ToastContainer} from "react-toastify";
 import {ParticleNetwork} from "@particle-network/auth";
@@ -20,11 +20,7 @@ interface IProps {
 
 const App: React.FC<IProps> = ({queryClient}) => {
 
-  const particle = new ParticleNetwork({
-    projectId: "1bca8c12-8844-4070-ba8c-9571fc32cba5",
-    clientKey: "clR7rCoWx6Yv9MzfSCJUGy7ANxiJDRWgVZLSdT5W",
-    appId: "6650a17f-78cb-4d7d-9a29-d8c45770acf1",
-  });
+
   const { chains, provider, webSocketProvider } = configureChains(
     [mainnet, polygon],
     [publicProvider()]
