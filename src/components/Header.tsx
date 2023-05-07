@@ -1,14 +1,16 @@
 import React from "react";
 import { ConnectButton } from '@rainbow-me/rainbowkit';
-
+import logo from "../assets/logo.png";
 
 
 const Header: React.FC = () => {
 
   return <div
-    className={'text-white w-full max-h-64 p-4 items-center border border-red-500  flex flex-row justify-between'}>
-    <div>logo</div>
-    <div>links</div>
+    className={'text-white w-full max-h-64 items-center flex flex-row justify-between py-6 px-20 bg-black rounded-[50px] rounded-t-none'}>
+    <div className={'flex flex-row gap-3 justify-start items-center'}>
+      <img src={logo} alt=""/>
+      <h1 className={'text-2xl'}>CollabY</h1>
+    </div>
 
     <div>
       <ConnectButton />
