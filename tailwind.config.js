@@ -13,6 +13,6 @@ export default {
         fake: 'url(@/assets/background.png)',
       }
     },
-  }, plugins: [import('flowbite/plugin')],
+  }, plugins: [import('flowbite/plugin'), import('@tailwindcss/typography')],
 }
 
