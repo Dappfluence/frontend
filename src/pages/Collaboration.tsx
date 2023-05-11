@@ -1,32 +1,55 @@
 import React, {FC} from 'react';
+import {useParams} from "react-router-dom";
+import {useQuery} from "@tanstack/react-query";
+import {getFirestore, doc, getDoc} from "firebase/firestore";
+import {Collaboration as Collab, populateCollaboration} from "../ui/collaborations/components/CollaborationCard.types";
 
 const Collaboration: FC = () => {
+
+  const {id = ''} = useParams();
+
+  const {data: collaboration = {} as Collab} = useQuery<Collab, unknown, Collab>({
+    queryKey: ['collaboration', id],
+    queryFn: async () => {
+      let data = await getDoc(doc(getFirestore(), 'collaborations', id))
+      if (!data.exists() || data.data() === undefined) {
+        return null
+      } else {
+        return populateCollaboration(data.data()!)
+      }
+    }
+  });
+
   return (
     <div className={'mt-[144px] container mx-auto'}>
       <div className={'flex justify-between items-center gap-16'}>
         <div className={'grow'}>
           <h1 className={'text-5xl font-black'}>
-            GUCCI
+            {collaboration?.brand.title}
           </h1>
           <div className={'mt-6 flex justify-between'}>
             <div>
               <p className={'text-xs'}>Collaboration type:</p>
-              <p className={'text-base font-semibold mt-1'}>Video Collaboration</p>
+              <p className={'text-base font-semibold mt-1'}>{collaboration.type} Collaboration</p>
             </div>
             <div>
               <p className={'text-xs'}>Dates:</p>
-              <p className={'text-base font-semibold mt-1'}>4 Mar 2023 - 5 Jun 2023</p>
+              <p className={'text-base font-semibold mt-1'}>
+                <span>{new Date(collaboration.dates.start * 1000).toLocaleDateString()}</span>
+                <span> - </span>
+                <span>{new Date(collaboration.dates.end * 1000).toLocaleDateString()}</span>
+              </p>
             </div>
             <div>
               <p className={'text-xs'}>Brand Link:</p>
               <div className={'mt-1'}>
-                <a href='#' className={'text-base text-blue-500 font-semibold'}>https://www.gucci.com</a>
+                <a href='#' className={'text-base text-blue-500 font-semibold'}>{collaboration.brand.link}</a>
               </div>
             </div>
           </div>
         </div>
         <div>
-          <img src="https://via.placeholder.com/630x200" alt=""/>
+          <img src={collaboration.brand.image} alt=""/>
         </div>
       </div>
 
@@ -39,10 +62,18 @@ const Collaboration: FC = () => {
           </h3>
 
           <p className={'text-lg mt-4'}>
-            We're looking for fashion and style influencers to create a sponsored video showcasing our latest collection. Your video should feature one or more of our products from this collection in an authentic and engaging way, while also highlighting the unique history and significance behind this collection. For example, you could create a lookbook video featuring our new collection, or film a tutorial on how to style our products.
+            We're looking for fashion and style influencers to create a sponsored video showcasing our latest
+            collection. Your video should feature one or more of our products from this collection in an authentic and
+            engaging way, while also highlighting the unique history and significance behind this collection. For
+            example, you could create a lookbook video featuring our new collection, or film a tutorial on how to style
+            our products.
             <br/>
             <br/>
-            For this video collaboration, we're specifically looking for influencers who can showcase their unique style and creativity while featuring our Bamboo 1947 Collection. You should highlight the versatility and elegance of the collection by incorporating it into your everyday life, whether that's through creating a lookbook, a day-in-the-life vlog, or any other creative video concept that showcases our products and the Gucci lifestyle.
+            For this video collaboration, we're specifically looking for influencers who can showcase their unique style
+            and creativity while featuring our Bamboo 1947 Collection. You should highlight the versatility and elegance
+            of the collection by incorporating it into your everyday life, whether that's through creating a lookbook, a
+            day-in-the-life vlog, or any other creative video concept that showcases our products and the Gucci
+            lifestyle.
           </p>
 
         </div>

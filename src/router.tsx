@@ -12,11 +12,11 @@ const router = createBrowserRouter([
   },
   {path: "/company", element: <Company/>},
   {
-    path: "/collabs",
+    path: "/collaborations",
     element: <Collaborations/>
   },
   {
-    path: '/collabs/123',
+    path: '/collaboration/:id',
     element: <Collaboration/>
   }
 ])
