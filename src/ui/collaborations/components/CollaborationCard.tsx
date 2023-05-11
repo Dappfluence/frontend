@@ -1,4 +1,5 @@
 import React, {FC} from 'react';
+import {Link} from "react-router-dom";
 
 const CollaborationCard: FC = () => {
   return (
@@ -25,7 +26,9 @@ const CollaborationCard: FC = () => {
         <span className={'text-lg text-pink-500'}>#fashion #gucci #clothes</span>
       </div>
       <div className={'flex justify-between items-center'}>
-        <button className={'inline-block py-3 px-5 rounded-lg bg-blue-600 text-white'}>View Details</button>
+        <Link to={'/collabs/123'} >
+          <button className={'inline-block py-3 px-5 rounded-lg bg-blue-600 text-white'}>View Details</button>
+        </Link>
         <span className={'text-3xl font-bold'}>2000 <small className={'text-lg'}>$</small></span>
       </div>
     </div>
