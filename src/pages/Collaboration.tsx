@@ -8,17 +8,19 @@ const Collaboration: FC = () => {
 
   const {id = ''} = useParams();
 
-  const {data: collaboration = {} as Collab} = useQuery<Collab, unknown, Collab>({
+  const {data: collaboration} = useQuery<unknown, unknown, Collab>({
     queryKey: ['collaboration', id],
     queryFn: async () => {
       let data = await getDoc(doc(getFirestore(), 'collaborations', id))
       if (!data.exists() || data.data() === undefined) {
-        return null
+        return undefined
       } else {
         return populateCollaboration(data.data()!)
       }
     }
   });
+
+  if (!collaboration) return null;
 
   return (
     <div className={'mt-[144px] container mx-auto'}>
