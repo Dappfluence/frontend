@@ -30,7 +30,7 @@ const CollaborationCard: FC<CollaborationCardProps> = ({collaboration}) => {
         <Link to={'/collaboration/' + collaboration.id}>
           <button className={'inline-block py-3 px-5 rounded-lg bg-blue-600 text-white'}>View Details</button>
         </Link>
-        <span className={'text-3xl font-bold'}>{collaboration.reward} <small className={'text-lg'}>$</small></span>
+        <span className={'text-3xl font-bold'}>{collaboration.reward} <small className={'text-lg'}>tBnB</small></span>
       </div>
     </div>
 

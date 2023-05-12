@@ -25,7 +25,7 @@ const Collaboration: FC = () => {
   return (
     <div className={'mt-[144px] container mx-auto'}>
       <div className={'flex justify-between items-center gap-16'}>
-        <div className={'grow'}>
+        <div className={'grow w-1/2'}>
           <h1 className={'text-5xl font-black'}>
             {collaboration?.brand.title}
           </h1>
@@ -50,12 +50,12 @@ const Collaboration: FC = () => {
             </div>
           </div>
         </div>
-        <div>
+        <div className={'grow w-1/2 flex items-center justify-center'}>
           <img src={collaboration.brand.image} alt=""/>
         </div>
       </div>
 
-      <div className={'flex mt-16 gap-16'}>
+      <div className={'flex mt-16 gap-16 justify-between'}>
 
         <div className={'w-[45%]'}>
 
