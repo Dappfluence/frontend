@@ -6,6 +6,7 @@ import InfoStack from "../shared/ui/InfoStack";
 import dayjs from "dayjs";
 import relativeTime from 'dayjs/plugin/relativeTime';
 import {Link} from "react-router-dom";
+import {ConnectButton} from "@rainbow-me/rainbowkit";
 
 const pastCollaboration = {
   id: 123,
@@ -146,7 +147,7 @@ const InfluencerProfile: FC = () => {
 
         <div className={'flex flex-col gap-5 w-[35%]'}>
           <Card className={'py-[76px] flex justify-center items-center'}>
-            <button className={'text-blue-700 border rounded-lg border-blue-700 py-3 px-5'}>Connect your wallet</button>
+            <ConnectButton />
           </Card>
 
           <Card>
