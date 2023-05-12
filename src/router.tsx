@@ -3,6 +3,7 @@ import Home from "./pages/Home";
 import Collaborations from "./pages/Collaborations";
 import Company from "./pages/Company";
 import Collaboration from "./pages/Collaboration";
+import InfluencerProfile from "./pages/InfluencerProfile";
 import CreateCollaboration from "./pages/CreateCollaboration";
 
 
@@ -22,6 +23,10 @@ const router = createBrowserRouter([
   {
     path: '/collaboration/:id',
     element: <Collaboration/>
+  },
+  {
+    path: '/me',
+    element: <InfluencerProfile />
   }
 ])
 
