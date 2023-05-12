@@ -3,6 +3,7 @@ import Home from "./pages/Home";
 import Collaborations from "./pages/Collaborations";
 import Company from "./pages/Company";
 import Collaboration from "./pages/Collaboration";
+import CreateCollaboration from "./pages/CreateCollaboration";
 
 
 const router = createBrowserRouter([
@@ -14,6 +15,9 @@ const router = createBrowserRouter([
   {
     path: "/collaborations",
     element: <Collaborations/>
+  },{
+    path: "/collaboration/new",
+    element: <CreateCollaboration/>
   },
   {
     path: '/collaboration/:id',

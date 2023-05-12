@@ -2,6 +2,9 @@ import React, {FC} from 'react'
 import Card from "../ui/company/components/Card";
 import WalletCard from "../ui/company/components/WalletCard";
 import BrandCard from "../ui/company/components/BrandCard";
+import Footer from "../widgets/Footer";
+import {Button} from "flowbite-react";
+import {Link} from "react-router-dom";
 
 const Company: FC = () => {
 
@@ -25,6 +28,11 @@ const Company: FC = () => {
         </div>
       </Card>
     </div>
+    <Footer>
+      <Link to={'/collaboration/new'}>
+        <Button>Create new collaboration</Button>
+      </Link>
+    </Footer>
   </div>
 }
 

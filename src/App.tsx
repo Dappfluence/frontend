@@ -5,7 +5,7 @@ import Header from "./widgets/Header";
 import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
 
 import {configureChains, createClient, WagmiConfig} from 'wagmi';
-import {polygon, mainnet} from "wagmi/chains"
+import {bscTestnet} from "wagmi/chains"
 import {publicProvider} from 'wagmi/providers/public';
 import {ToastContainer} from "react-toastify";
 import {ParticleNetwork} from "@particle-network/auth";
@@ -13,6 +13,7 @@ import {particleWallet} from "@particle-network/rainbowkit-ext";
 import {injectedWallet, metaMaskWallet} from "@rainbow-me/rainbowkit/wallets";
 import '@rainbow-me/rainbowkit/styles.css';
 import {connectorsForWallets, RainbowKitProvider} from "@rainbow-me/rainbowkit";
+import Footer from "./widgets/Footer";
 
 interface IProps {
   queryClient: QueryClient;
@@ -26,7 +27,7 @@ const App: React.FC<IProps> = ({queryClient}) => {
   });
 
   const {chains, provider, webSocketProvider} = configureChains(
-    [mainnet, polygon],
+    [bscTestnet],
     [publicProvider()]
   );
   const popularWallets = {
