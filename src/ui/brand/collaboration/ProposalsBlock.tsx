@@ -9,7 +9,7 @@ interface Props {
   approvable?: boolean
 }
 
-const ProposalsBlock: FC<Props> = ({proposals, onApprove, onDeny, approvable = true}) => {
+const ProposalsBlock: FC<Props> = ({proposals, onApprove, onDeny, approvable = false}) => {
   return (
     <div className={'mt-8'}>
       <h3 className={'text-lg font-bold'}>{proposals.length} candidates</h3>

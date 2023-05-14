@@ -1,5 +1,6 @@
-import {doc, getDoc, updateDoc, setDoc, getFirestore} from "firebase/firestore";
+import {doc, getDoc, updateDoc, setDoc, getFirestore, getDocs, query, collection, where} from "firebase/firestore";
 import {IBrand, TAccountType} from "../shared/types/account";
+import {ICollaboration, populateCollaboration} from "../ui/collaborations/components/CollaborationCard.types";
 
 
 export const getType = async (address: string | undefined): Promise<TAccountType> => {
@@ -15,6 +16,18 @@ export const getType = async (address: string | undefined): Promise<TAccountType
 export const setType = async (address: string, type: TAccountType) => {
   let document = doc(getFirestore(), "accounts", address);
   await setDoc(document, {type: type});
+}
+
+
+export const fetchCollaborations = async (address: string, provider: any): Promise<ICollaboration[]> => {
+  if (!provider || !address) return [];
+
+  let docs = await getDocs(query(collection(getFirestore(), "collaborations"), where("approved", "==", address)));
+
+  console.log("docs", );
+
+  return Promise.all(docs.docs.map(e => ({id: e.id, ...e.data()})).map(populateCollaboration))
+
 }
 
 

@@ -12,10 +12,10 @@ const RepresentativeBlock: FC<Props> = ({representatives}) => {
 
       <div className={'mt-4'}>
         {representatives.map(repr => (
-          <>
+          <div key={repr.email}>
             <Representative name={repr.name} email={repr.email} />
             <hr/>
-          </>
+          </div>
         ))}
 
       </div>

@@ -1,6 +1,7 @@
 import React, {FC} from 'react';
 import {IInfluencer} from "../../../shared/types/account";
 import {useNavigate} from "react-router-dom";
+import classNames from "classnames";
 
 interface Props extends IInfluencer {
   onDeny: (address: string) => void;
@@ -22,7 +23,7 @@ const Proposal: FC<Props> = ({
                              }) => {
   const navigate = useNavigate()
   return (
-    <div className={'flex py-3 items-center'}>
+    <div className={classNames('flex py-3 items-center', {'bg-sky-500 bg-opacity-20': approved})}>
       <div
         className={'rounded-full w-[64px] h-[64px] flex items-center justify-center overflow-hidden border cursor-pointer'}
         onClick={() => navigate('/influencer/' + address)}>

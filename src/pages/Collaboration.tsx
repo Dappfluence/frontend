@@ -1,7 +1,7 @@
 import React, {FC, useEffect, useState} from 'react';
 import {useParams} from "react-router-dom";
-import {useQuery} from "@tanstack/react-query";
-import {getFirestore, doc, getDoc, setDoc, collection} from "firebase/firestore";
+import {useQuery, useQueryClient} from "@tanstack/react-query";
+import {getFirestore, doc, getDoc, setDoc, collection, updateDoc} from "firebase/firestore";
 import {ICollaboration, populateCollaboration} from "../ui/collaborations/components/CollaborationCard.types";
 import {useParticleProvider} from "@particle-network/connect-react-ui";
 import RepresentativeBlock from "../ui/brand/collaboration/RepresentativeBlock";
@@ -30,25 +30,36 @@ const Collaboration: FC = () => {
     queryKey: ['collaboration', id],
     queryFn: async () => {
       let data = await getDoc(doc(getFirestore(), 'collaborations', id))
-      if (!data.exists() || data.data() === undefined || !provider) {
+      if (!data.exists() || data.data() === undefined) {
         return null
       } else {
-        let web3 = new Web3(provider as any);
-        const contract = new web3.eth.Contract(CollaborationABI, id);
-        const accepted = await contract.methods.proposalAccepted().call();
-        const inProgress = await contract.methods.workInProgress().call();
-        const powProvided = await contract.methods.powProvided().call();
-        const finished = await contract.methods.finished().call();
-        console.error(accepted)
-        let doc = await populateCollaboration(data.data()!, id)
-
-        return {...doc, accepted, inProgress, powProvided, finished} as ICollaboration
+        return populateCollaboration(data.data()!, id)
       }
     }
   });
   useEffect(() => {
-    if (provider) refetch()
+    if (provider) {
+      fetchStatus()
+    }
   }, [provider])
+
+
+  const [status, setStatus] = useState<any>({finished: true});
+
+  const fetchStatus = async () => {
+    let web3 = new Web3(provider as any);
+    const contract = new web3.eth.Contract(CollaborationABI, id);
+    const accepted = await contract.methods.proposalAccepted().call();
+    const inProgress = await contract.methods.workInProgress().call();
+    const powProvided = await contract.methods.powProvided().call();
+    const finished = await contract.methods.finished().call();
+    setStatus({
+      accepted,
+      inProgress,
+      powProvided,
+      finished
+    })
+  }
   const [isApplicationModalOpen, setIsApplicationModalOpen] = useState(false);
 
   const handleApplicationModalOpen = () => {
@@ -84,11 +95,11 @@ const Collaboration: FC = () => {
   useEffect(() => {
 
     if (provider) {
-      fetchRepresentatives()
+      fetchProposals()
     }
   }, [provider])
 
-  const fetchRepresentatives = async () => {
+  const fetchProposals = async () => {
     let web3 = new Web3(provider as any);
     const contract = new web3.eth.Contract(CollaborationABI, id);
     const proposals = await contract.methods.getProposals().call();
@@ -108,6 +119,7 @@ const Collaboration: FC = () => {
   }, [collaboration])
 
 
+  const queryClient = useQueryClient();
   const handleApprove = async (a) => {
     let web3 = new Web3(provider as any);
     const contract = new web3.eth.Contract(CollaborationABI, id);
@@ -124,6 +136,8 @@ const Collaboration: FC = () => {
         await contract.methods.acceptProposal(index).send({
           from: account,
         });
+        await queryClient.invalidateQueries(['collaboration', id])
+        await updateDoc(doc(getFirestore(), 'collaborations', id), {approved: a});
       } catch (e) {
         console.log(e)
         throw new Error(e)
@@ -223,7 +237,7 @@ const Collaboration: FC = () => {
           {!isCurrentUserOwner ? (
             <RepresentativeBlock representatives={proposals}/>
           ) : (
-            <ProposalsBlock approvable={!collaboration.finished && !collaboration.inProgress && !collaboration.accepted}
+            <ProposalsBlock approvable={!status.finished && !status.inProgress && !status.accepted}
                             onDeny={(a) => {
                               alert('deny ' + a)
                             }} onApprove={handleApprove} proposals={proposals}/>

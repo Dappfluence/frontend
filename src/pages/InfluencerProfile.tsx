@@ -8,8 +8,10 @@ import relativeTime from 'dayjs/plugin/relativeTime';
 import {Link} from "react-router-dom";
 import {IInfluencer} from "../shared/types/account";
 import {useQuery} from "@tanstack/react-query";
-import {ConnectButton, useAccount} from "@particle-network/connect-react-ui";
+import {ConnectButton, useAccount, useParticleProvider} from "@particle-network/connect-react-ui";
 import {fetchInfluencer} from "../api/influencer";
+import {ICollaboration} from "../ui/collaborations/components/CollaborationCard.types";
+import {fetchCollaborations} from "../api/account";
 
 const pastCollaboration = {
   id: 123,
@@ -46,6 +48,16 @@ const InfluencerProfile: FC = () => {
     queryKey: ['influencer', account],
     queryFn: async (): Promise<IInfluencer> => fetchInfluencer(account!)
   })
+
+  const provider = useParticleProvider();
+
+  const {data: activeCollaborations = [], refetch} = useQuery({
+    queryKey: ['collaborations', account],
+    queryFn: async (): Promise<ICollaboration[]> => fetchCollaborations(account!, provider)
+  })
+  useEffect(() => {
+    if (provider) refetch()
+  }, [provider])
 
   return (
     <div className={'container mx-auto mt-[144px] '}>
@@ -155,12 +167,12 @@ const InfluencerProfile: FC = () => {
 
         <div className={'flex flex-col gap-5 w-[35%]'}>
           <Card>
-            <h3 className={'text-2xl font-bold'}>{data.collaboration.active.length} Active collaborations</h3>
-            {data.collaboration.active.length > 0 ? (
+            <h3 className={'text-2xl font-bold'}>{activeCollaborations.length} Active collaborations</h3>
+            {activeCollaborations.length > 0 ? (
               <div className={'mt-4 w-full flex-col'}>
 
                 {
-                  data.collaboration.active.map((collab, index) => (
+                  activeCollaborations.map((collab, index) => (
                     <div key={index}
                          className='grow p-6 rounded-lg border border-blue-200 flex justify-between items-center gap-4'>
 
