@@ -4,7 +4,6 @@ import {CollaborationCardProps} from "./CollaborationCard.types";
 
 const CollaborationCard: FC<CollaborationCardProps> = ({collaboration}) => {
 
-  console.log(collaboration)
   return (
 
     <div className={'border border-blue-300 p-6 rounded-[12px] flex flex-col gap-4'}>

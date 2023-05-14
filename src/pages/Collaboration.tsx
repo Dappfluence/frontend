@@ -168,7 +168,6 @@ const Collaboration: FC = () => {
     }
   }, [collaboration])
 
-  console.log(collaboration, status)
 
 
   const queryClient = useQueryClient();
@@ -199,7 +198,6 @@ const Collaboration: FC = () => {
       pending: 'Accepting proposal...',
       success: 'Proposal accepted!',
     })
-    console.log(a)
   }
 
   const handleApproveWork = async () => {
