@@ -23,8 +23,8 @@ export const MyProfile: FC = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if(!accountLoading) {
-      if(account === undefined) {
+    if (!accountLoading) {
+      if (account === undefined) {
         navigate('/')
       } else {
         refetch()
@@ -48,32 +48,32 @@ export const MyProfile: FC = () => {
   if (type === 'brand') return <Brand/>
   if (type === 'influencer') return <InfluencerProfile/>
   return (
-      <Modal
-        show={true}
-        size="md"
-        popup={true}
-      >
-        <Modal.Body className={'bg-white'}>
-          <div className="text-center p-8 pt-12">
-            <h3 className="mb-8 text-3xl font-thin">
-              Who are you?
-            </h3>
-            <div className="flex justify-center gap-4">
-              <button
-                className={'py-2 px-4 text-blue-700 border border-blue-700 rounded-xl'}
-                onClick={() => handleChoice('brand')}
-              >
-                Brand
-              </button>
-              <button
-                className={'py-2 px-4 text-green-700 border border-green-700 rounded-xl'}
-                onClick={() => handleChoice('influencer')}
-              >
-                Influencer
-              </button>
-            </div>
+    <Modal
+      show={true}
+      size="md"
+      popup={true}
+    >
+      <Modal.Body className={'bg-white'}>
+        <div className="text-center p-8 pt-12">
+          <h3 className="mb-8 text-3xl font-thin">
+            Who are you?
+          </h3>
+          <div className="flex justify-center gap-4">
+            <button
+              className={'py-2 px-4 text-blue-700 border border-blue-700 rounded-xl'}
+              onClick={() => handleChoice('brand')}
+            >
+              Brand
+            </button>
+            <button
+              className={'py-2 px-4 text-green-700 border border-green-700 rounded-xl'}
+              onClick={() => handleChoice('influencer')}
+            >
+              Influencer
+            </button>
           </div>
-        </Modal.Body>
-      </Modal>
-    )
+        </div>
+      </Modal.Body>
+    </Modal>
+  )
 }
