@@ -149,7 +149,6 @@ const Collaboration: FC = () => {
         await updateDoc(doc(getFirestore(), 'collaborations', id), {approved: a});
       } catch (e) {
         console.log(e)
-        throw new Error(e)
       }
     }, {
       error: 'Error',
@@ -171,14 +170,12 @@ const Collaboration: FC = () => {
         await queryClient.invalidateQueries(['collaboration', id])
       } catch (e) {
         console.log(e)
-        throw new Error(e)
       }
     }, {
       error: 'Error',
       pending: 'Approving work...',
       success: 'Work approved!',
     })
-    console.log(a)
   }
 
   const renderBrandFooter = () => {
