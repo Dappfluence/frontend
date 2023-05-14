@@ -1,7 +1,7 @@
 import React, {FC, useEffect, useState} from 'react';
 import {useParams} from "react-router-dom";
 import {useQuery, useQueryClient} from "@tanstack/react-query";
-import {getFirestore, doc, getDoc, setDoc, collection, updateDoc} from "firebase/firestore";
+import {getFirestore, doc, getDoc, updateDoc} from "firebase/firestore";
 import {ICollaboration, populateCollaboration} from "../ui/collaborations/components/CollaborationCard.types";
 import {useParticleProvider} from "@particle-network/connect-react-ui";
 import RepresentativeBlock from "../ui/brand/collaboration/RepresentativeBlock";
@@ -12,11 +12,10 @@ import Web3 from "web3";
 import Footer from "../widgets/Footer";
 import {Button} from "flowbite-react";
 import ApplyForCollaborationModal from "../widgets/ApplyForCollaborationModal";
-import FactoryABI from "../assets/abi/Factory.json";
 import {toast} from "react-toastify";
 import {fetchInfluencer} from "../api/influencer";
-import {fetchBrand} from "../api/brand";
-import {CheckCircleIcon, CheckIcon, ClockIcon} from "@heroicons/react/24/outline";
+import {CheckCircleIcon, ClockIcon} from "@heroicons/react/24/outline";
+import UploadWorkModal from "../widgets/UploadWorkModal";
 
 
 const representatives = [{
@@ -32,13 +31,14 @@ const representatives = [{
 
 const Collaboration: FC = () => {
   const [isCurrentUserOwner, setIsCurrentUserOwner] = useState(false);
+  const [isCurrentUserParticipating, setIsCurrentUserParticipating] = useState(false);
   const {id = ''} = useParams();
   const account = useAccount();
 
   const provider = useParticleProvider();
 
   const [proposals, setProposals] = useState<any[]>([])
-  const {data: collaboration = null, refetch} = useQuery<unknown, unknown, ICollaboration>({
+  const {data: collaboration = null} = useQuery<unknown, unknown, ICollaboration>({
     queryKey: ['collaboration', id],
     queryFn: async () => {
       let data = await getDoc(doc(getFirestore(), 'collaborations', id))
@@ -73,6 +73,7 @@ const Collaboration: FC = () => {
     })
   }
   const [isApplicationModalOpen, setIsApplicationModalOpen] = useState(false);
+  const [isProofModalOpen, setIsProofModalOpen] = useState(false);
 
   const handleApplicationModalOpen = () => {
     setIsApplicationModalOpen(true);
@@ -80,6 +81,14 @@ const Collaboration: FC = () => {
 
   const handleApplicationModalClose = () => {
     setIsApplicationModalOpen(false);
+  }
+
+  const handleProofModalOpen = () => {
+    setIsProofModalOpen(true);
+  }
+
+  const handleProofModalClose = () => {
+    setIsProofModalOpen(false);
   }
 
   const handleApplicationModalSubmit = async (data) => {
@@ -104,7 +113,27 @@ const Collaboration: FC = () => {
 
   }
 
-  console.log(collaboration)
+  const handleUploadProofOfWork = async (data) => {
+    if (account === undefined) return;
+    let web3 = new Web3(provider as any);
+    const contract = new web3.eth.Contract(CollaborationABI, id);
+    setIsProofModalOpen(false)
+    await toast.promise(async () => {
+      try {
+        await contract.methods.submitProofOfWork(data.proof).send({
+          from: account,
+        });
+      } catch (e) {
+        console.log(e)
+        throw new Error(e)
+      }
+    }, {
+      error: 'Error',
+      pending: 'Sending proof...',
+      success: 'Proof sent!',
+    })
+
+  }
 
   useEffect(() => {
     if (provider) {
@@ -117,6 +146,7 @@ const Collaboration: FC = () => {
     const contract = new web3.eth.Contract(CollaborationABI, id);
     const proposals = await contract.methods.getProposals().call();
     let result = await Promise.all(proposals.map(e => e[1]).map(fetchInfluencer))
+
     setProposals(result)
   }
   useEffect(() => {
@@ -125,7 +155,15 @@ const Collaboration: FC = () => {
     } else {
       setIsCurrentUserOwner(false)
     }
+
+    if(collaboration?.approved === account) {
+      setIsCurrentUserParticipating(true)
+    } else {
+      setIsCurrentUserParticipating(false);
+    }
   }, [collaboration])
+
+  console.log(collaboration, status)
 
 
   const queryClient = useQueryClient();
@@ -342,13 +380,50 @@ const Collaboration: FC = () => {
                 <p className={'text-xs'}>Renumeration:</p>
                 <h1 className={'text-base font-bold'}>{collaboration.reward}tBNB</h1>
               </div>
-              <div>
-                <Button onClick={handleApplicationModalOpen}>Apply for this collaboration</Button>
-                <ApplyForCollaborationModal collaborationAuthor={collaboration.brand.title}
-                                            isOpen={isApplicationModalOpen} onClose={handleApplicationModalClose}
-                                            onSubmit={handleApplicationModalSubmit}/>
-              </div>
+              {
+                isCurrentUserParticipating ? (
+                  status.accepted && (
+                    status.powProvided ? (
+                      status.finished ? (
+                        <h1>The renumeration was sent to your wallet: {account}</h1>
+                      ) : (
+                        <h1>Waiting for company representative to review your work. <br/>You don’t need to do anything for now.</h1>
+                      )
+                    ) : (
+                      <div>
+                        <div className={'flex gap-2'}>
+                          <div>
+                            <p>Company representative approved your participation.</p>
+                            <p>Time left to upload your work: 1 month 25 days 14 hours</p>
+                          </div>
+                          <Button onClick={handleProofModalOpen}>Upload work</Button>
+                        </div>
+
+                        <UploadWorkModal collaborationAuthor={collaboration.brand.title}
+                                         isOpen={isProofModalOpen} onClose={handleProofModalClose}
+                                         onSubmit={handleUploadProofOfWork}/>
+                      </div>
+                    )
+                  )
+                ) : (
+                  status.accepted ? (
+                    <div>
+                      <h1>The collaboration has already began.</h1>
+                    </div>
+                    ) : (
+                    <div>
+                      <Button onClick={handleApplicationModalOpen}>Apply for this collaboration</Button>
+                      <ApplyForCollaborationModal collaborationAuthor={collaboration.brand.title}
+                                                  isOpen={isApplicationModalOpen} onClose={handleApplicationModalClose}
+                                                  onSubmit={handleApplicationModalSubmit}/>
+                    </div>
+                    )
+
+                )
+              }
+
             </>
+
           )}
         </Footer>
       </div>
