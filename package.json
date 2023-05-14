@@ -12,7 +12,7 @@
     "@chainlink/contracts": "^0.6.1",
     "@faker-js/faker": "^8.0.0",
     "@heroicons/react": "^2.0.17",
-    "@particle-network/auth": "^0.13.0",
+    "@particle-network/auth": "^0.12.2",
     "@particle-network/connect-react-ui": "^0.13.0",
     "@particle-network/provider": "^0.13.0",
     "@particle-network/rainbowkit-ext": "^0.13.0",
