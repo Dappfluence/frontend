@@ -1,20 +1,30 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import {ConnectButton} from '@rainbow-me/rainbowkit';
 import logo from "../assets/logo.png";
 import {authentication} from "../main";
-import { TwitterAuthProvider, signInWithPopup } from "firebase/auth";
-
+import {TwitterAuthProvider, signInWithPopup, onAuthStateChanged, User} from "firebase/auth";
+import firebase from "firebase/compat";
+import {Link} from "react-router-dom";
 
 
 const Header: React.FC = () => {
-  const loginWithTwitter = ()=> {
+  const [user, setUser] = useState<User | null | undefined>(undefined);
+  const loginWithTwitter = () => {
     const provider = new TwitterAuthProvider();
-    signInWithPopup(authentication, provider).then((re) => {
-      alert(re.user.displayName);
-    }).catch(err => {
-      console.error(err)
+    signInWithPopup(authentication, provider).catch(err => {
+      alert(err)
     })
   }
+  useEffect(() => {
+
+    onAuthStateChanged(authentication, (user) => {
+      if (user) {
+        setUser(user)
+      } else {
+        setUser(null)
+      }
+    });
+  }, [])
 
   return <div className={'mb-[96px]'}>
     <div
@@ -24,7 +34,25 @@ const Header: React.FC = () => {
         <h1 className={'text-2xl'}>CollabY</h1>
       </div>
       <div>
-        <button className={'text-white p-2 border rounded-lg'} onClick={loginWithTwitter}>Login with Twitter</button>
+        {user !== undefined ? (
+          user ? (
+            <div className={'flex gap-2 items-center'}>
+              <div className={'w-8 h-8 overflow-hidden rounded-full'}>
+                <img src={user.photoURL || ''} alt=""/>
+              </div>
+              <h1>
+                <Link to='/me'>
+                  {user.displayName}
+                </Link>
+              </h1>
+            </div>
+          ) : (
+            <button className={'text-white p-2 border rounded-lg'} onClick={loginWithTwitter}>Login with
+              Twitter</button>
+          )
+        ) : (
+          <h1>Implement skeleton here</h1>
+        )}
       </div>
     </div>
   </div>

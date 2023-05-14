@@ -1,4 +1,4 @@
-import React, {FC} from 'react';
+import React, {FC, useEffect, useState} from 'react';
 import Card from "../ui/influencer_profile/components/card";
 import EditIcon from "../assets/icons/EditIcon";
 import TwitterFilled from "../assets/icons/TwitterFilled";
@@ -7,6 +7,8 @@ import dayjs from "dayjs";
 import relativeTime from 'dayjs/plugin/relativeTime';
 import {Link} from "react-router-dom";
 import {ConnectButton} from "@rainbow-me/rainbowkit";
+import {onAuthStateChanged, User} from "firebase/auth";
+import {authentication} from "../main";
 
 const pastCollaboration = {
   id: 123,
@@ -38,7 +40,24 @@ const data = {
 dayjs.extend(relativeTime);
 
 const InfluencerProfile: FC = () => {
+  const [user, setUser] = useState<User | null | undefined>(undefined);
 
+  useEffect(() => {
+
+    onAuthStateChanged(authentication, (user) => {
+      if (user) {
+        const uid = user.uid;
+        console.log(user)
+        console.log("uid", uid, user)
+        setUser(user)
+
+      } else {
+        console.log("user is logged out", user)
+        setUser(null)
+
+      }
+    });
+  }, [])
 
   return (
     <div className={'container mx-auto mt-[144px] '}>
@@ -47,16 +66,14 @@ const InfluencerProfile: FC = () => {
         <div className={'flex flex-col gap-5 w-[63%]'}>
           <Card className={'flex items-center justify-between'}>
             <div className={'flex gap-6 items-center'}>
-
-              <div className={'h-36 w-36 overflow-hidden rounded-full'}>
-                <img src="https://via.placeholder.com/150x150" alt=""/>
+              <div className={'h-36 w-36 overflow-hidden rounded-full flex justify-center items-center'}>
+                <img src={user?.photoURL ?? "https://via.placeholder.com/150x150"} alt=""/>
               </div>
               <div>
-                <h2 className={'text-3xl font-bold'}>{data.first_name} {data.last_name}</h2>
+                <h2 className={'text-3xl font-bold'}>{user?.displayName}</h2>
                 <p className={'flex gap-4 mt-2'}>
-                  {data.social.map(media => (
-                    <a href={media.link} className={'text-base hover:text-blue-500'}>{media.text}</a>
-                  ))}
+                  <a href={`mailto:${user?.email}`} className={'text-base hover:text-blue-500'}>{user?.email}</a>
+                  <a href={`tel:${user?.phoneNumber}`} className={'text-base hover:text-blue-500'}>{user?.phoneNumber}</a>
                 </p>
               </div>
             </div>

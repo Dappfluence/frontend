@@ -20,6 +20,7 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
+
 export const queryClient = new QueryClient();
 
 export const authentication = getAuth(app)

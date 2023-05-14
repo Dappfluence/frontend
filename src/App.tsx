@@ -59,8 +59,7 @@ const App: React.FC<IProps> = ({queryClient}) => {
       <WagmiConfig client={wagmiClient}>
         <RainbowKitProvider chains={chains}>
           <ToastContainer position={'bottom-right'} theme={'dark'}/>
-          <Header/>
-          <RouterProvider router={router}/>
+          <RouterProvider router={router} />
         </RainbowKitProvider>
       </WagmiConfig>
     </QueryClientProvider>
