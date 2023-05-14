@@ -18,6 +18,17 @@ import {fetchInfluencer} from "../api/influencer";
 import {fetchBrand} from "../api/brand";
 
 
+const representatives = [{
+  name: 'Wellington Smytheington',
+  email: 'w.smytheington@gucci.com'
+}, {
+  name: 'Abernathy Buckminster',
+  email: 'abuckminster@gucci.com'
+}, {
+  name: 'Beauchamp Beaumontworth',
+  email: 'beaumontworth.b@gucci.com'
+}]
+
 const Collaboration: FC = () => {
   const [isCurrentUserOwner, setIsCurrentUserOwner] = useState(false);
   const {id = ''} = useParams();
@@ -153,7 +164,7 @@ const Collaboration: FC = () => {
   if (!collaboration) return null;
 
   return (
-    <div className={'mt-[144px] container mx-auto'}>
+    <div className={'mt-[144px] container mx-auto mb-[100px]'}>
       <div className={'flex justify-between items-center gap-16'}>
         <div className={'grow w-1/2'}>
           <h1 className={'text-5xl font-black'}>
@@ -211,7 +222,7 @@ const Collaboration: FC = () => {
         </div>
 
 
-        <div>
+        <div className={'w-[45%]'}>
 
           <h3 className={'text-lg font-bold'}>Main Requirements</h3>
 
@@ -235,7 +246,7 @@ const Collaboration: FC = () => {
           </div>
 
           {!isCurrentUserOwner ? (
-            <RepresentativeBlock representatives={proposals}/>
+            <RepresentativeBlock representatives={representatives}/>
           ) : (
             <ProposalsBlock approvable={!status.finished && !status.inProgress && !status.accepted}
                             onDeny={(a) => {
@@ -243,14 +254,34 @@ const Collaboration: FC = () => {
                             }} onApprove={handleApprove} proposals={proposals}/>
           )}
 
+
+          {!isCurrentUserOwner && collaboration.status === 'CREATED' && (
+              <div className={'mt-8 p-2 border rounded-lg border-green-600 bg-green-50'}>
+                <h3 className={'text-lg font-black'}>
+                  Proof of work
+                </h3>
+                <p className={'text-xs mt-2'}>
+                  Lorem ipsum dolor sit amet, consectetur adipisicing elit. Cupiditate doloremque et ex exercitationem laborum nam nobis qui recusandae rerum vero. Asperiores beatae consectetur eveniet ex explicabo, labore odit rem sequi.
+                </p>
+              </div>
+            )
+          }
         </div>
 
         <Footer>
-          {isCurrentUserOwner ? (123) : (
+          {isCurrentUserOwner ? (
+            <>
+              <div>
+                <p className={'text-xs'}>Proposals:</p>
+                <h1 className={'text-lg font-bold'}>{proposals.length} Candidates</h1>
+              </div>
+              <div />
+            </>
+          ) : (
             <>
               <div>
                 <p className={'text-xs'}>Renumeration:</p>
-                <h1 className={'text-base font-bold'}>1tBNB</h1>
+                <h1 className={'text-base font-bold'}>{collaboration.reward}tBNB</h1>
               </div>
               <div>
                 <Button onClick={handleApplicationModalOpen}>Apply for this collaboration</Button>

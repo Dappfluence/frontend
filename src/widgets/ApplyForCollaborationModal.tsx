@@ -22,6 +22,7 @@ const CreateCollaborationModal: FC<Props> = ({isOpen, onClose, onSubmit, collabo
   }
   const onFormSubmit = handleSubmit((data) => {
     onSubmit(data);
+    handleClose();
   });
 
   return (
