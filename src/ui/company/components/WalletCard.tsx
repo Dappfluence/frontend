@@ -1,6 +1,4 @@
 import React, {FC} from 'react';
-import classNames from "classnames";
-import {Button} from "flowbite-react";
 import Card from "./Card";
 import {ConnectButton} from "@rainbow-me/rainbowkit";
 import {useAccount, useBalance} from "wagmi";

@@ -1,7 +1,5 @@
 import React, {FC} from 'react'
 import Card from "../ui/company/components/Card";
-import WalletCard from "../ui/company/components/WalletCard";
-import BrandCard from "../ui/company/components/BrandCard";
 import {Link} from "react-router-dom";
 import {Button} from "flowbite-react";
 import Footer from "../widgets/Footer";
