@@ -1,12 +1,32 @@
-import React, {FC} from 'react';
+import React, {FC, useEffect, useState} from 'react';
 import {useParams} from "react-router-dom";
 import {useQuery} from "@tanstack/react-query";
 import {getFirestore, doc, getDoc} from "firebase/firestore";
 import {ICollaboration, populateCollaboration} from "../ui/collaborations/components/CollaborationCard.types";
+import Representative from "../ui/brand/collaboration/Representative";
+import RepresentativeBlock from "../ui/brand/collaboration/RepresentativeBlock";
+import {useAccount} from "@particle-network/connect-react-ui";
+import ProposalsBlock from "../ui/brand/collaboration/ProposalsBlock";
+
+
+const representatives = [{
+  name: 'Wellington Smytheington',
+  email: 'w.smytheington@gucci.com'
+},{
+  name: 'Wellington Smytheington',
+  email: 'w.smytheington@gucci.com'
+},{
+  name: 'Wellington Smytheington',
+  email: 'w.smytheington@gucci.com'
+},{
+  name: 'Wellington Smytheington',
+  email: 'w.smytheington@gucci.com'
+},]
 
 const Collaboration: FC = () => {
-
+  const [isCurrentUserOwner, setIsCurrentUserOwner] = useState(false);
   const {id = ''} = useParams();
+  const account = useAccount();
 
   const {data: collaboration} = useQuery<unknown, unknown, ICollaboration>({
     queryKey: ['collaboration', id],
@@ -19,6 +39,15 @@ const Collaboration: FC = () => {
       }
     }
   });
+
+  useEffect(() => {
+    if(collaboration?.creator === account) {
+      setIsCurrentUserOwner(true)
+    } else {
+      setIsCurrentUserOwner(false)
+    }
+  }, [collaboration])
+
 
   if (!collaboration) return null;
 
@@ -104,52 +133,11 @@ const Collaboration: FC = () => {
             </div>
           </div>
 
-          <div className={'mt-8'}>
-            <h3 className={'text-lg font-bold'}>4 Representatives</h3>
-            <p className={'text-xs'}>Feel free to ask our representative any questions regarding the task</p>
-
-            <div className={'mt-4'}>
-
-              <div className={'flex py-3 items-center'}>
-                <div className={'rounded-full p-6 border'}></div>
-                <div className={'grow ml-4'}>
-                  <h4 className={'text-base font-semibold'}>Wellington Smytheington</h4>
-                  <p className={'text-xs'}>w.smytheington@gucci.com</p>
-                </div>
-                <button>123</button>
-              </div>
-              <hr/>
-              <div className={'flex py-3 items-center'}>
-                <div className={'rounded-full p-6 border'}></div>
-                <div className={'grow ml-4'}>
-                  <h4 className={'text-base font-semibold'}>Wellington Smytheington</h4>
-                  <p className={'text-xs'}>w.smytheington@gucci.com</p>
-                </div>
-                <button>123</button>
-              </div>
-              <hr/>
-              <div className={'flex py-3 items-center'}>
-                <div className={'rounded-full p-6 border'}></div>
-                <div className={'grow ml-4'}>
-                  <h4 className={'text-base font-semibold'}>Wellington Smytheington</h4>
-                  <p className={'text-xs'}>w.smytheington@gucci.com</p>
-                </div>
-                <button>123</button>
-              </div>
-              <hr/>
-              <div className={'flex py-3 items-center'}>
-                <div className={'rounded-full overflow-hidden w-[50px] h-[50px] border'}>
-                  <img src="https://via.placeholder.com/150x150" alt=""/>
-                </div>
-                <div className={'grow ml-4'}>
-                  <h4 className={'text-base font-semibold'}>Wellington Smytheington</h4>
-                  <p className={'text-xs'}>w.smytheington@gucci.com</p>
-                </div>
-                <button>123</button>
-              </div>
-
-            </div>
-          </div>
+          {isCurrentUserOwner ? (
+            <RepresentativeBlock representatives={representatives} />
+          ) : (
+            <ProposalsBlock onDeny={(a) => {alert('deny ' + a)}} onApprove={(a) => {alert('approve ' + a)}} proposals={representatives.map(repr => ({...repr, address: '123', photoURL: 'https://via.placeholder.com/150x150'}))} />
+          )}
 
         </div>
 

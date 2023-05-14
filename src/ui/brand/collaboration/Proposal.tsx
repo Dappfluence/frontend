@@ -1,0 +1,28 @@
+import React, {FC} from 'react';
+import {IInfluencer} from "../../../shared/types/account";
+
+interface Props extends IInfluencer {
+  onDeny: (address: string) => void;
+  onApprove: (address: string) => void;
+  address: string;
+}
+const Proposal:FC<Props> = ({email, name, photoURL, onDeny, onApprove, address}) => {
+  return (
+    <div className={'flex py-3 items-center'}>
+      <div className={'rounded-full w-[64px] h-[64px] flex items-center justify-center overflow-hidden border'}>
+        <img src={photoURL} alt={name}/>
+      </div>
+      <div className={'grow ml-4'}>
+        <h4 className={'text-base font-semibold'}>{name}</h4>
+        <p className={'text-xs'}>{email}</p>
+      </div>
+      <div className={'flex gap-2'}>
+        <button className={'px-4 py-2 text-red-700 border border-red-700 rounded-xl'} onClick={() => onDeny(address)}>Deny</button>
+        <button className={'px-4 py-2 text-blue-700 border border-blue-700 rounded-xl'} onClick={() => onApprove(address)}>Approve</button>
+
+      </div>
+    </div>
+  );
+};
+
+export default Proposal;
