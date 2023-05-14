@@ -3,6 +3,7 @@ import {IBrand, TAccountType} from "../shared/types/account";
 
 
 export const getType = async (address: string | undefined): Promise<TAccountType> => {
+  console.log(address)
   if (!address) return "unknown";
   let data = await getDoc(doc(getFirestore(), "accounts", address));
   if (data.exists()) {
