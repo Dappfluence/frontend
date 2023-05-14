@@ -22,7 +22,6 @@ const App: React.FC<IProps> = ({queryClient}) => {
         walletSort={['Particle Auth', 'Wallet']}
         particleAuthSort={[
           'twitter',
-          'github',
         ]}
         //TODO: get particle config from https://dashboard.particle.network/
         options={{

@@ -4,7 +4,6 @@ import {Link} from "react-router-dom";
 import {
   ConnectButton,
   useAccount,
-  useParticleProvider,
 } from "@particle-network/connect-react-ui";
 
 import '@particle-network/connect-react-ui/dist/index.css';

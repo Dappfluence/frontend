@@ -3,7 +3,7 @@ import {useParams} from "react-router-dom";
 import {useQuery, useQueryClient} from "@tanstack/react-query";
 import {getFirestore, doc, getDoc, updateDoc} from "firebase/firestore";
 import {ICollaboration, populateCollaboration} from "../ui/collaborations/components/CollaborationCard.types";
-import {useParticleProvider} from "@particle-network/connect-react-ui";
+import {useConnectModal, useParticleConnect, useParticleProvider} from "@particle-network/connect-react-ui";
 import RepresentativeBlock from "../ui/brand/collaboration/RepresentativeBlock";
 import {useAccount} from "@particle-network/connect-react-ui";
 import ProposalsBlock from "../ui/brand/collaboration/ProposalsBlock";
@@ -76,8 +76,11 @@ const Collaboration: FC = () => {
   const [isApplicationModalOpen, setIsApplicationModalOpen] = useState(false);
   const [isProofModalOpen, setIsProofModalOpen] = useState(false);
 
+  const {openConnectModal} = useConnectModal()
+  const address = useAccount()
   const handleApplicationModalOpen = () => {
-    setIsApplicationModalOpen(true);
+    if(address) return setIsApplicationModalOpen(true);
+    openConnectModal!()
   }
 
   const handleApplicationModalClose = () => {
