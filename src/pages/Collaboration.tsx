@@ -18,6 +18,17 @@ import {fetchInfluencer} from "../api/influencer";
 import {fetchBrand} from "../api/brand";
 
 
+const representatives = [{
+  name: 'Wellington Smytheington',
+  email: 'w.smytheington@gucci.com'
+}, {
+  name: 'Abernathy Buckminster',
+  email: 'abuckminster@gucci.com'
+}, {
+  name: 'Beauchamp Beaumontworth',
+  email: 'beaumontworth.b@gucci.com'
+}]
+
 const Collaboration: FC = () => {
   const [isCurrentUserOwner, setIsCurrentUserOwner] = useState(false);
   const {id = ''} = useParams();
@@ -221,7 +232,7 @@ const Collaboration: FC = () => {
           </div>
 
           {!isCurrentUserOwner ? (
-            <RepresentativeBlock representatives={proposals}/>
+            <RepresentativeBlock representatives={representatives}/>
           ) : (
             <ProposalsBlock approvable={!collaboration.finished && !collaboration.inProgress && !collaboration.accepted}
                             onDeny={(a) => {
@@ -233,8 +244,14 @@ const Collaboration: FC = () => {
 
         <Footer>
           {isCurrentUserOwner ? (
-            123
-            ) : (
+            <>
+              <div>
+                <p className={'text-xs'}>Proposals:</p>
+                <h1 className={'text-lg font-bold'}>{proposals.length} Candidates</h1>
+              </div>
+              <div />
+            </>
+          ) : (
             <>
               <div>
                 <p className={'text-xs'}>Renumeration:</p>

@@ -7,7 +7,7 @@ interface Props {
 const RepresentativeBlock: FC<Props> = ({representatives}) => {
   return (
     <div className={'mt-8'}>
-      <h3 className={'text-lg font-bold'}>4 Representatives</h3>
+      <h3 className={'text-lg font-bold'}>{representatives.length} Representatives</h3>
       <p className={'text-xs'}>Feel free to ask our representative any questions regarding the task</p>
 
       <div className={'mt-4'}>
