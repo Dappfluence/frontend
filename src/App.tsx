@@ -2,7 +2,6 @@ import React from 'react'
 import {RouterProvider} from "react-router-dom";
 import router from "./router";
 import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
-import {ToastContainer} from "react-toastify";
 
 import {BSC, BSCTestnet, Ethereum, EthereumGoerli,} from '@particle-network/common';
 import '@rainbow-me/rainbowkit/styles.css';
@@ -22,28 +21,26 @@ const App: React.FC<IProps> = ({queryClient}) => {
         walletSort={['Particle Auth', 'Wallet']}
         particleAuthSort={[
           'twitter',
+          'github',
         ]}
         //TODO: get particle config from https://dashboard.particle.network/
         options={{
           projectId: '1bca8c12-8844-4070-ba8c-9571fc32cba5' as string,
-          clientKey:  'clR7rCoWx6Yv9MzfSCJUGy7ANxiJDRWgVZLSdT5W' as string,
+          clientKey: 'clR7rCoWx6Yv9MzfSCJUGy7ANxiJDRWgVZLSdT5W' as string,
           appId: '6650a17f-78cb-4d7d-9a29-d8c45770acf1' as string,
           chains: [
-            BSC,
-            Ethereum,
             BSCTestnet,
           ],
           particleWalletEntry: {
-            displayWalletEntry: false,
+            displayWalletEntry: true,
             defaultWalletEntryPosition: WalletEntryPosition.BR,
-            supportChains: [Ethereum, EthereumGoerli],
+            supportChains: [BSCTestnet],
           },
         }}
         language="en"
         theme={'light'}
       >
-          <ToastContainer position={'bottom-right'} theme={'dark'}/>
-          <RouterProvider router={router} />
+        <RouterProvider router={router}/>
       </ModalProvider>
     </QueryClientProvider>
   </div>

@@ -26,6 +26,10 @@ const Header: React.FC = () => {
 
   const provider = useParticleProvider();
 
+  provider?.on('connect', () => {
+    console.error('connected')
+  })
+
   useEffect(() => {
     if (!account) return
     const particle = new ParticleNetwork({

@@ -6,7 +6,11 @@ import {QueryClient} from "@tanstack/react-query";
 
 // Import the functions you need from the SDKs you need
 import {initializeApp} from "firebase/app";
-import {getAuth} from "firebase/auth";
+import {ToastContainer} from "react-toastify";
+import {Buffer as BufferPolyfill} from 'buffer'
+
+declare var Buffer: typeof BufferPolyfill;
+globalThis.Buffer = BufferPolyfill
 
 const firebaseConfig = {
   apiKey: "AIzaSyDsfF-fRVH65gzjpxUZmizI3PjWFRB6RfA",
@@ -18,14 +22,14 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
-const app = initializeApp(firebaseConfig);
+initializeApp(firebaseConfig);
 
 export const queryClient = new QueryClient();
 
-export const authentication = getAuth(app)
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
+    <ToastContainer position={'bottom-right'} theme={'dark'}/>
     <App queryClient={queryClient}/>
   </React.StrictMode>,
 )

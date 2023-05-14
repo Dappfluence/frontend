@@ -8,7 +8,6 @@ import relativeTime from 'dayjs/plugin/relativeTime';
 import {Link} from "react-router-dom";
 import {ConnectButton} from "@rainbow-me/rainbowkit";
 import {onAuthStateChanged, User} from "firebase/auth";
-import {authentication} from "../main";
 
 const pastCollaboration = {
   id: 123,
@@ -16,7 +15,7 @@ const pastCollaboration = {
   dates: {end: 1683427200, start: 1677465600},
   reward: 2000,
   tags: ["fashion", "gucci", "clothes"],
-  content: { title: "Create an Engaging Video Featuring Gucci Products!"},
+  content: {title: "Create an Engaging Video Featuring Gucci Products!"},
   type: "VIDEO",
 }
 
@@ -42,23 +41,6 @@ dayjs.extend(relativeTime);
 const InfluencerProfile: FC = () => {
   const [user, setUser] = useState<User | null | undefined>(undefined);
 
-  useEffect(() => {
-
-    onAuthStateChanged(authentication, (user) => {
-      if (user) {
-        const uid = user.uid;
-        console.log(user)
-        console.log("uid", uid, user)
-        setUser(user)
-
-      } else {
-        console.log("user is logged out", user)
-        setUser(null)
-
-      }
-    });
-  }, [])
-
   return (
     <div className={'container mx-auto mt-[144px] '}>
       <h1 className={'text-5xl font-black'}>My profile</h1>
@@ -73,7 +55,8 @@ const InfluencerProfile: FC = () => {
                 <h2 className={'text-3xl font-bold'}>{user?.displayName}</h2>
                 <p className={'flex gap-4 mt-2'}>
                   <a href={`mailto:${user?.email}`} className={'text-base hover:text-blue-500'}>{user?.email}</a>
-                  <a href={`tel:${user?.phoneNumber}`} className={'text-base hover:text-blue-500'}>{user?.phoneNumber}</a>
+                  <a href={`tel:${user?.phoneNumber}`}
+                     className={'text-base hover:text-blue-500'}>{user?.phoneNumber}</a>
                 </p>
               </div>
             </div>
@@ -164,7 +147,7 @@ const InfluencerProfile: FC = () => {
 
         <div className={'flex flex-col gap-5 w-[35%]'}>
           <Card className={'py-[76px] flex justify-center items-center'}>
-            <ConnectButton />
+            <ConnectButton/>
           </Card>
 
           <Card>
