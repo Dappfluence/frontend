@@ -9,5 +9,6 @@ export type TAccountType = "brand" | "influencer" | "unknown";
 
 export interface IInfluencer {
   name: string;
-  email: string
+  email: string;
+  [key: string]: string
 }
