@@ -1,7 +1,7 @@
 import React, {FC, useEffect, useState} from 'react';
 import {useParams} from "react-router-dom";
 import {useQuery, useQueryClient} from "@tanstack/react-query";
-import {getFirestore, doc, getDoc, setDoc, collection, updateDoc} from "firebase/firestore";
+import {getFirestore, doc, getDoc, updateDoc} from "firebase/firestore";
 import {ICollaboration, populateCollaboration} from "../ui/collaborations/components/CollaborationCard.types";
 import {useParticleProvider} from "@particle-network/connect-react-ui";
 import RepresentativeBlock from "../ui/brand/collaboration/RepresentativeBlock";
@@ -12,11 +12,9 @@ import Web3 from "web3";
 import Footer from "../widgets/Footer";
 import {Button} from "flowbite-react";
 import ApplyForCollaborationModal from "../widgets/ApplyForCollaborationModal";
-import FactoryABI from "../assets/abi/Factory.json";
 import {toast} from "react-toastify";
 import {fetchInfluencer} from "../api/influencer";
-import {fetchBrand} from "../api/brand";
-import {CheckCircleIcon, CheckIcon, ClockIcon} from "@heroicons/react/24/outline";
+import {CheckCircleIcon, ClockIcon} from "@heroicons/react/24/outline";
 import UploadWorkModal from "../widgets/UploadWorkModal";
 
 
@@ -40,7 +38,7 @@ const Collaboration: FC = () => {
   const provider = useParticleProvider();
 
   const [proposals, setProposals] = useState<any[]>([])
-  const {data: collaboration = null, refetch} = useQuery<unknown, unknown, ICollaboration>({
+  const {data: collaboration = null} = useQuery<unknown, unknown, ICollaboration>({
     queryKey: ['collaboration', id],
     queryFn: async () => {
       let data = await getDoc(doc(getFirestore(), 'collaborations', id))
@@ -406,7 +404,7 @@ const Collaboration: FC = () => {
 
                         <UploadWorkModal collaborationAuthor={collaboration.brand.title}
                                          isOpen={isProofModalOpen} onClose={handleProofModalClose}
-                                         onSubmit={alert}/>
+                                         onSubmit={handleUploadProofOfWork}/>
                       </div>
                     )
                   )
