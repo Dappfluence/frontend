@@ -1,7 +1,6 @@
 import React from 'react'
 import {RouterProvider} from "react-router-dom";
 import router from "./router";
-import Header from "./widgets/Header";
 import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
 
 import {configureChains, createClient, WagmiConfig} from 'wagmi';
@@ -13,7 +12,6 @@ import {particleWallet} from "@particle-network/rainbowkit-ext";
 import {injectedWallet, metaMaskWallet} from "@rainbow-me/rainbowkit/wallets";
 import '@rainbow-me/rainbowkit/styles.css';
 import {connectorsForWallets, RainbowKitProvider} from "@rainbow-me/rainbowkit";
-import Footer from "./widgets/Footer";
 
 interface IProps {
   queryClient: QueryClient;

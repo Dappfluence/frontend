@@ -1,9 +1,7 @@
 import React, {useEffect, useState} from "react";
-import {ConnectButton} from '@rainbow-me/rainbowkit';
 import logo from "../assets/logo.png";
 import {authentication} from "../main";
 import {TwitterAuthProvider, signInWithPopup, onAuthStateChanged, User} from "firebase/auth";
-import firebase from "firebase/compat";
 import {Link} from "react-router-dom";
 
 
