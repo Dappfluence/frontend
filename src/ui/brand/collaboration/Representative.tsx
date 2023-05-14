@@ -1,4 +1,5 @@
 import React, {FC} from 'react';
+import {Button, Tooltip} from "flowbite-react";
 
 
 interface Props {
@@ -13,7 +14,9 @@ const Representative: FC<Props> = ({name, email}) => {
         <h4 className={'text-base font-semibold'}>{name}</h4>
         <p className={'text-xs'}>{email}</p>
       </div>
-      <button>123</button>
+      <Tooltip content="Coming soon">
+      <Button disabled className={'blur-[2px] grayscale'}>Chat</Button>
+      </Tooltip>
     </div>
   );
 };

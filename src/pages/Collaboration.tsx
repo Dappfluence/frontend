@@ -139,7 +139,7 @@ const Collaboration: FC = () => {
   if (!collaboration) return null;
 
   return (
-    <div className={'mt-[144px] container mx-auto'}>
+    <div className={'mt-[144px] container mx-auto mb-[100px]'}>
       <div className={'flex justify-between items-center gap-16'}>
         <div className={'grow w-1/2'}>
           <h1 className={'text-5xl font-black'}>
@@ -232,7 +232,9 @@ const Collaboration: FC = () => {
         </div>
 
         <Footer>
-          {isCurrentUserOwner ? (123) : (
+          {isCurrentUserOwner ? (
+            123
+            ) : (
             <>
               <div>
                 <p className={'text-xs'}>Renumeration:</p>

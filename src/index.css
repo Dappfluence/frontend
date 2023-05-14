@@ -2,3 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 @tailwind typography;
+
+
+.particle-wallet-entry-container {
+  display: none;
+}
