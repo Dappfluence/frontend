@@ -33,13 +33,14 @@ const Brand: FC = () => {
     let web3 = new Web3(provider as any);
     setLoading(true)
     let listener = onSnapshot(query(collection(getFirestore(), "collaborations"), where("creator", '==', account)), async (snapshot) => {
-      let colls = await Promise.all(snapshot.docs.map((doc) => ({id: doc.id, ...doc.data()})).map(async e => {
+      let colls = await Promise.all(snapshot.docs.map((doc) => ({id: doc.id, ...doc.data()})).map(async (e: any) => {
+        // @ts-ignore
         const contract = new web3.eth.Contract(CollaborationABI, e.id);
         const accepted = await contract.methods.proposalAccepted().call();
         const inProgress = await contract.methods.workInProgress().call();
         const powProvided = await contract.methods.powProvided().call();
         const finished = await contract.methods.finished().call();
-        let brand = await fetchBrand(e.creator)
+        let brand = await fetchBrand(e?.creator)
         return {
           id: e.id,
           type: e.type || "POST",
@@ -52,7 +53,7 @@ const Brand: FC = () => {
           inProgress: inProgress,
           powProvided: powProvided,
           finished: finished
-        } as ICollaboration
+        } as unknown as ICollaboration
       }))
       setLoading(false)
       setCollabs(colls);
@@ -70,9 +71,14 @@ const Brand: FC = () => {
   }
 
 
-  const submitModal = async (data) => {
+  const submitModal = async (data: {
+    title: string;
+    budget: number;
+    deadline: string;
+  }) => {
     if (account === undefined) return;
     let web3 = new Web3(provider as any);
+    // @ts-ignore
     const contract = new web3.eth.Contract(FactoryABI, "0xb644986c9f3ed0F49d064c54052847B17fD0E0b1");
     let date = new Date(data.deadline).getTime() / 1000;
     setModalOpen(false)
@@ -80,7 +86,7 @@ const Brand: FC = () => {
       try {
         let result = await contract.methods.createCollaboration(date).send({
           from: account,
-          value: web3.utils.toWei(data.budget, 'ether')
+          value: web3.utils.toWei(data.budget.toString(), 'ether')
         });
         await setDoc(doc(collection(getFirestore(), "collaborations"), result.events.CollaborationCreated.returnValues[0]), {
           title: data.title,
@@ -90,7 +96,7 @@ const Brand: FC = () => {
         });
       } catch (e) {
         console.log(e)
-        throw new Error(e)
+        throw new Error(e as string)
       }
     }, {
       error: 'Error',
@@ -102,7 +108,7 @@ const Brand: FC = () => {
 
   const {data: brand = null} = useQuery<{}, unknown, IBrand>({
     queryKey: ['brand', account],
-    queryFn: async (): Promise<IBrand> => {
+    queryFn: async (): Promise<IBrand | null> => {
       return fetchBrand(account)
     }
   })

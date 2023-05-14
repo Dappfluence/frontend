@@ -2,6 +2,7 @@ export interface IBrand {
   title: string;
   link: string;
   image: string;
+  address?: string;
 }
 
 
