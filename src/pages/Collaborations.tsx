@@ -11,7 +11,7 @@ const Collaborations: FC = () => {
     queryKey: ['collaborations'],
     queryFn: async () => {
       let data = await getDocs(collection(getFirestore(), 'collaborations'))
-      return Promise.all(data.docs.map(e => populateCollaboration({id: e.id, ...e.data()})))
+      return Promise.all(data.docs.map(e => populateCollaboration({id: e.id.toLowerCase(), ...e.data()})))
     },
   })
 

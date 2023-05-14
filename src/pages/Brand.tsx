@@ -14,7 +14,7 @@ import {useAccount, useAccountInfo, useParticleConnect, useParticleProvider} fro
 import Web3 from "web3";
 import {toast} from "react-toastify";
 import {ICollaboration} from "../ui/collaborations/components/CollaborationCard.types";
-import {addDoc, collection, doc, getFirestore, query, where, onSnapshot, setDoc, getDoc} from "firebase/firestore";
+import {collection, doc, getFirestore, query, where, onSnapshot, setDoc} from "firebase/firestore";
 import {Collaboration} from "../shared/ui/Collaboration";
 import {ArrowPathIcon} from "@heroicons/react/24/outline";
 
@@ -32,7 +32,7 @@ const Brand: FC = () => {
     if (!account) return;
     let web3 = new Web3(provider as any);
     setLoading(true)
-    let listener = onSnapshot(query(collection(getFirestore(), "collaborations"), where("creator", '==', account)), async (snapshot) => {
+    let listener = onSnapshot(query(collection(getFirestore(), "collaborations"), where("creator", '==', account.toLowerCase())), async (snapshot) => {
       let colls = await Promise.all(snapshot.docs.map((doc) => ({id: doc.id, ...doc.data()})).map(async (e: any) => {
         // @ts-ignore
         const contract = new web3.eth.Contract(CollaborationABI, e.id);
@@ -88,7 +88,7 @@ const Brand: FC = () => {
           from: account,
           value: web3.utils.toWei(data.budget.toString(), 'ether')
         });
-        await setDoc(doc(collection(getFirestore(), "collaborations"), result.events.CollaborationCreated.returnValues[0]), {
+        await setDoc(doc(collection(getFirestore(), "collaborations"), result.events.CollaborationCreated.returnValues[0].toLowerCase()), {
           title: data.title,
           deadline: date,
           budget: data.budget,

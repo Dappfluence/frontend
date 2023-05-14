@@ -1,4 +1,3 @@
-import {doc, getDoc, getFirestore} from "firebase/firestore";
 import {IInfluencer} from "../shared/types/account";
 import {faker} from "@faker-js/faker";
 

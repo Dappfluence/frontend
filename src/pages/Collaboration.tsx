@@ -3,7 +3,7 @@ import {useParams} from "react-router-dom";
 import {useQuery, useQueryClient} from "@tanstack/react-query";
 import {getFirestore, doc, getDoc, updateDoc} from "firebase/firestore";
 import {ICollaboration, populateCollaboration} from "../ui/collaborations/components/CollaborationCard.types";
-import {useConnectModal, useParticleConnect, useParticleProvider} from "@particle-network/connect-react-ui";
+import {useConnectModal, useParticleProvider} from "@particle-network/connect-react-ui";
 import RepresentativeBlock from "../ui/brand/collaboration/RepresentativeBlock";
 import {useAccount} from "@particle-network/connect-react-ui";
 import ProposalsBlock from "../ui/brand/collaboration/ProposalsBlock";
@@ -41,7 +41,7 @@ const Collaboration: FC = () => {
   const {data: collaboration = null} = useQuery<unknown, unknown, ICollaboration>({
     queryKey: ['collaboration', id],
     queryFn: async () => {
-      let data = await getDoc(doc(getFirestore(), 'collaborations', id))
+      let data = await getDoc(doc(getFirestore(), 'collaborations', id.toLowerCase()))
       if (!data.exists() || data.data() === undefined) {
         return null
       } else {
@@ -79,7 +79,7 @@ const Collaboration: FC = () => {
   const {openConnectModal} = useConnectModal()
   const address = useAccount()
   const handleApplicationModalOpen = () => {
-    if(address) return setIsApplicationModalOpen(true);
+    if (address) return setIsApplicationModalOpen(true);
     openConnectModal!()
   }
 
@@ -150,7 +150,7 @@ const Collaboration: FC = () => {
     // @ts-ignore
     const contract = new web3.eth.Contract(CollaborationABI, id);
     const proposals = await contract.methods.getProposals().call();
-    let result = await Promise.all(proposals.map((e:any) => e[1]).map(fetchInfluencer))
+    let result = await Promise.all(proposals.map((e: any) => e[1]).map(fetchInfluencer))
 
     setProposals(result)
   }
@@ -190,7 +190,7 @@ const Collaboration: FC = () => {
           from: account,
         });
         await queryClient.invalidateQueries(['collaboration', id])
-        await updateDoc(doc(getFirestore(), 'collaborations', id), {approved: a});
+        await updateDoc(doc(getFirestore(), 'collaborations', id.toLowerCase()), {approved: a});
       } catch (e) {
         console.log(e)
       }
