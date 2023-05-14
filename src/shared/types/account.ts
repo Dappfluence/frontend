@@ -12,5 +12,5 @@ export interface IInfluencer {
   name: string;
   email: string;
   photoURL: string;
-  [key: string]: string
+  [key: string]: any;
 }
