@@ -1418,14 +1418,6 @@
   resolved "https://registry.yarnpkg.com/@openzeppelin/contracts/-/contracts-4.3.3.tgz#ff6ee919fc2a1abaf72b22814bfb72ed129ec137"
   integrity sha512-tDBopO1c98Yk7Cv/PZlHqrvtVjlgK5R4J6jxLwoO7qxK4xqOiZG+zSkIvGFpPZ0ikc3QOED3plgdqjgNTnBc7g==
 
-"@particle-network/analytics@^0.12.0":
-  version "0.12.0"
-  resolved "https://registry.yarnpkg.com/@particle-network/analytics/-/analytics-0.12.0.tgz#d68ce7e207bbdf13a87a193de97610c882618c88"
-  integrity sha512-vu0D+XFmoyUnlV+DxwOCeGETLeCKB6hfPGHtQTusAczTf6Z/PLaWR5151nIOaRbukkSYmhwlwutheyvkXrn2BA==
-  dependencies:
-    hash.js "^1.1.7"
-    uuidv4 "^6.2.13"
-
 "@particle-network/analytics@^0.13.0":
   version "0.13.0"
   resolved "https://registry.yarnpkg.com/@particle-network/analytics/-/analytics-0.13.0.tgz#926cfcac0d1e60300b5c697ce6932d3b6a33fdee"
@@ -1433,17 +1425,6 @@
   dependencies:
     hash.js "^1.1.7"
     uuidv4 "^6.2.13"
-
-"@particle-network/auth@^0.12.2":
-  version "0.12.2"
-  resolved "https://registry.yarnpkg.com/@particle-network/auth/-/auth-0.12.2.tgz#9a6fc952aff90b0d34fa79b5483e5833bdc599c3"
-  integrity sha512-YgGtqMXmwLwzp9Byasv7Wy47znNv0U0B0FaqeusMF6rKw3U0AbfEOJgX8gk68RsAdYg28JmkVc21/B9BRs5Ebg==
-  dependencies:
-    "@particle-network/analytics" "^0.12.0"
-    "@particle-network/common" "^0.12.1"
-    "@particle-network/crypto" "^0.12.0"
-    draggabilly "^3.0.0"
-    qs "^6.11.0"
 
 "@particle-network/auth@^0.13.0":
   version "0.13.0"
@@ -1455,11 +1436,6 @@
     "@particle-network/crypto" "^0.13.0"
     draggabilly "^3.0.0"
     qs "^6.11.0"
-
-"@particle-network/common@^0.12.1":
-  version "0.12.1"
-  resolved "https://registry.yarnpkg.com/@particle-network/common/-/common-0.12.1.tgz#4a8330e5dd1baf761cdd4a6ae3568d96dcd68a44"
-  integrity sha512-Stokz1hFZTW9stBnDnQkHoFPLZehJSqZ44XY7EjB4eDywviDHSQG8aRw4tYXtck0RGwiFvGET6Zl7cZd8Bw1jg==
 
 "@particle-network/common@^0.13.0":
   version "0.13.0"
@@ -1483,14 +1459,6 @@
   integrity sha512-5hGO5+fokYyOBVyXpeU+nCJXHiQMTZXU7VvzYX9xWIwVGaSs6OO513uadUT8L9xcfd2FJzFQjhLaPhlnaTErIw==
   dependencies:
     eventemitter3 "^4.0.0"
-
-"@particle-network/crypto@^0.12.0":
-  version "0.12.0"
-  resolved "https://registry.yarnpkg.com/@particle-network/crypto/-/crypto-0.12.0.tgz#81a69ef2d364723fbb37818ee3ca84052229840e"
-  integrity sha512-W3VD3vwLP61ctfbJ0sLGu7lmgY9diygwwHxN2oeYGCB9tqBZ1D3iGUNoioTZiDwOAkb7P1aPitpCiYnzgX5Xmg==
-  dependencies:
-    crypto-js "^4.1.1"
-    uuidv4 "^6.2.13"
 
 "@particle-network/crypto@^0.13.0":
   version "0.13.0"
