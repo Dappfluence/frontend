@@ -60,6 +60,7 @@ const Collaboration: FC = () => {
 
   const fetchStatus = async () => {
     let web3 = new Web3(provider as any);
+    // @ts-ignore
     const contract = new web3.eth.Contract(CollaborationABI, id);
     const accepted = await contract.methods.proposalAccepted().call();
     const inProgress = await contract.methods.workInProgress().call();
@@ -91,9 +92,10 @@ const Collaboration: FC = () => {
     setIsProofModalOpen(false);
   }
 
-  const handleApplicationModalSubmit = async (data) => {
+  const handleApplicationModalSubmit = async (data: any) => {
     if (account === undefined) return;
     let web3 = new Web3(provider as any);
+    // @ts-ignore
     const contract = new web3.eth.Contract(CollaborationABI, id);
     setIsApplicationModalOpen(false)
     await toast.promise(async () => {
@@ -103,7 +105,6 @@ const Collaboration: FC = () => {
         });
       } catch (e) {
         console.log(e)
-        throw new Error(e)
       }
     }, {
       error: 'Error',
@@ -113,9 +114,10 @@ const Collaboration: FC = () => {
 
   }
 
-  const handleUploadProofOfWork = async (data) => {
+  const handleUploadProofOfWork = async (data: any) => {
     if (account === undefined) return;
     let web3 = new Web3(provider as any);
+    // @ts-ignore
     const contract = new web3.eth.Contract(CollaborationABI, id);
     setIsProofModalOpen(false)
     await toast.promise(async () => {
@@ -125,7 +127,6 @@ const Collaboration: FC = () => {
         });
       } catch (e) {
         console.log(e)
-        throw new Error(e)
       }
     }, {
       error: 'Error',
@@ -143,9 +144,10 @@ const Collaboration: FC = () => {
 
   const fetchProposals = async () => {
     let web3 = new Web3(provider as any);
+    // @ts-ignore
     const contract = new web3.eth.Contract(CollaborationABI, id);
     const proposals = await contract.methods.getProposals().call();
-    let result = await Promise.all(proposals.map(e => e[1]).map(fetchInfluencer))
+    let result = await Promise.all(proposals.map((e:any) => e[1]).map(fetchInfluencer))
 
     setProposals(result)
   }
@@ -156,7 +158,7 @@ const Collaboration: FC = () => {
       setIsCurrentUserOwner(false)
     }
 
-    if(collaboration?.approved === account) {
+    if (collaboration?.approved === account) {
       setIsCurrentUserParticipating(true)
     } else {
       setIsCurrentUserParticipating(false);
@@ -167,8 +169,9 @@ const Collaboration: FC = () => {
 
 
   const queryClient = useQueryClient();
-  const handleApprove = async (a) => {
+  const handleApprove = async (a: string) => {
     let web3 = new Web3(provider as any);
+    // @ts-ignore
     const contract = new web3.eth.Contract(CollaborationABI, id);
     let index = 0;
     for (let i = 0; i < proposals.length; i++) {
@@ -198,6 +201,7 @@ const Collaboration: FC = () => {
 
   const handleApproveWork = async () => {
     let web3 = new Web3(provider as any);
+    // @ts-ignore
     const contract = new web3.eth.Contract(CollaborationABI, id);
 
     await toast.promise(async () => {
@@ -356,19 +360,19 @@ const Collaboration: FC = () => {
           )}
 
 
-          {!isCurrentUserOwner && collaboration.status === 'CREATED' && (
-            <div className={'mt-8 p-2 border rounded-lg border-green-600 bg-green-50'}>
-              <h3 className={'text-lg font-black'}>
-                Proof of work
-              </h3>
-              <p className={'text-xs mt-2'}>
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Cupiditate doloremque et ex exercitationem
-                laborum nam nobis qui recusandae rerum vero. Asperiores beatae consectetur eveniet ex explicabo, labore
-                odit rem sequi.
-              </p>
-            </div>
-          )
-          }
+          {/*{!isCurrentUserOwner && (*/}
+          {/*  <div className={'mt-8 p-2 border rounded-lg border-green-600 bg-green-50'}>*/}
+          {/*    <h3 className={'text-lg font-black'}>*/}
+          {/*      Proof of work*/}
+          {/*    </h3>*/}
+          {/*    <p className={'text-xs mt-2'}>*/}
+          {/*      Lorem ipsum dolor sit amet, consectetur adipisicing elit. Cupiditate doloremque et ex exercitationem*/}
+          {/*      laborum nam nobis qui recusandae rerum vero. Asperiores beatae consectetur eveniet ex explicabo, labore*/}
+          {/*      odit rem sequi.*/}
+          {/*    </p>*/}
+          {/*  </div>*/}
+          {/*)*/}
+          {/*}*/}
         </div>
 
         <Footer>
@@ -387,7 +391,8 @@ const Collaboration: FC = () => {
                       status.finished ? (
                         <h1>The renumeration was sent to your wallet: {account}</h1>
                       ) : (
-                        <h1>Waiting for company representative to review your work. <br/>You don’t need to do anything for now.</h1>
+                        <h1>Waiting for company representative to review your work. <br/>You don’t need to do anything
+                          for now.</h1>
                       )
                     ) : (
                       <div>
@@ -410,14 +415,14 @@ const Collaboration: FC = () => {
                     <div>
                       <h1>The collaboration has already began.</h1>
                     </div>
-                    ) : (
+                  ) : (
                     <div>
                       <Button onClick={handleApplicationModalOpen}>Apply for this collaboration</Button>
                       <ApplyForCollaborationModal collaborationAuthor={collaboration.brand.title}
                                                   isOpen={isApplicationModalOpen} onClose={handleApplicationModalClose}
                                                   onSubmit={handleApplicationModalSubmit}/>
                     </div>
-                    )
+                  )
 
                 )
               }

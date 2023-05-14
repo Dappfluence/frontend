@@ -103,7 +103,7 @@ const Brand: FC = () => {
   const {data: brand = null} = useQuery<{}, unknown, IBrand>({
     queryKey: ['brand', account],
     queryFn: async (): Promise<IBrand> => {
-      return fetchBrand(account || null)
+      return fetchBrand(account)
     }
   })
 

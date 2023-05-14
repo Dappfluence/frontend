@@ -59,7 +59,6 @@ export async function populateCollaboration(doc: DocumentData): Promise<ICollabo
     },
     creator: data.creator,
     tags: [],
-    approved: data.approved,
     reward: data.budget,
     proposals: [],
     approved: data.approved,
