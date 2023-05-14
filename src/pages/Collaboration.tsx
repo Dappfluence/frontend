@@ -7,21 +7,9 @@ import {useParticleProvider} from "@particle-network/connect-react-ui";
 import RepresentativeBlock from "../ui/brand/collaboration/RepresentativeBlock";
 import {useAccount} from "@particle-network/connect-react-ui";
 import ProposalsBlock from "../ui/brand/collaboration/ProposalsBlock";
+import CollaborationABI from "../assets/abi/Collaboration.json"
+import Web3 from "web3";
 
-
-const representatives = [{
-  name: 'Wellington Smytheington',
-  email: 'w.smytheington@gucci.com'
-}, {
-  name: 'Wellington Smytheington',
-  email: 'w.smytheington@gucci.com'
-}, {
-  name: 'Wellington Smytheington',
-  email: 'w.smytheington@gucci.com'
-}, {
-  name: 'Wellington Smytheington',
-  email: 'w.smytheington@gucci.com'
-},]
 
 const Collaboration: FC = () => {
   const [isCurrentUserOwner, setIsCurrentUserOwner] = useState(false);
@@ -29,21 +17,37 @@ const Collaboration: FC = () => {
   const account = useAccount();
 
   const provider = useParticleProvider();
-  const {data: collaboration} = useQuery<unknown, unknown, ICollaboration>({
+
+  const [representatives, setRepresentatives] = useState<string[]>([])
+  const {data: collaboration, refetch} = useQuery<unknown, unknown, ICollaboration>({
     queryKey: ['collaboration', id],
     queryFn: async () => {
       let data = await getDoc(doc(getFirestore(), 'collaborations', id))
       if (!data.exists() || data.data() === undefined) {
         return undefined
       } else {
-        // let web3 = new Web3(provider as any);
-        // const contract = new web3.eth.Contract(CollaborationABI, id);
-        // const proposals = await contract.methods.proposals().call();
-        // console.log(proposals)
+
         return populateCollaboration(data.data()!, id)
       }
     }
   });
+
+
+  useEffect(() => {
+
+    if (provider) {
+      fetchRepresentatives()
+    }
+  }, [provider])
+
+  const fetchRepresentatives = async () => {
+    let web3 = new Web3(provider as any);
+    const contract = new web3.eth.Contract(CollaborationABI, id);
+    const proposals = await contract.methods.getProposals().call();
+    console.log(proposals)
+  }
+
+  console.log(collaboration, account)
 
   useEffect(() => {
     if (collaboration?.creator === account) {
@@ -138,7 +142,7 @@ const Collaboration: FC = () => {
             </div>
           </div>
 
-          {isCurrentUserOwner ? (
+          {!isCurrentUserOwner ? (
             <RepresentativeBlock representatives={representatives}/>
           ) : (
             <ProposalsBlock onDeny={(a) => {

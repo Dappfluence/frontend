@@ -12,14 +12,15 @@ interface Props {
 const ProposalsBlock: FC<Props> = ({proposals, onApprove, onDeny}) => {
   return (
     <div className={'mt-8'}>
-      <h3 className={'text-lg font-bold'}>{proposals.length} New cadidates</h3>
+      <h3 className={'text-lg font-bold'}>{proposals.length} New candidates</h3>
 
       <div className={'mt-4'}>
-        {proposals.map(proposal => (
-          <>
-            <Proposal name={proposal.name} email={proposal.email} address={proposal.address} photoURL={proposal.photoURL} onDeny={onDeny} onApprove={onApprove}/>
+        {proposals.map((proposal, index) => (
+          <div key={index}>
+            <Proposal name={proposal.name} email={proposal.email} address={proposal.address}
+                      photoURL={proposal.photoURL} onDeny={onDeny} onApprove={onApprove}/>
             <hr/>
-          </>
+          </div>
         ))}
 
       </div>
