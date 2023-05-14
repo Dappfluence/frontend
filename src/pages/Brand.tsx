@@ -29,7 +29,6 @@ const Brand: FC = () => {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-
     if (!account) return;
     let web3 = new Web3(provider as any);
     setLoading(true)
@@ -41,7 +40,7 @@ const Brand: FC = () => {
         const powProvided = await contract.methods.powProvided().call();
         const finished = await contract.methods.finished().call();
         console.log(accepted, inProgress, powProvided, finished)
-        let brand = fetchBrand(e.creator)
+        let brand = await fetchBrand(e.creator)
         return {
           id: e.id,
           type: e.type || "POST",
@@ -81,7 +80,6 @@ const Brand: FC = () => {
           from: account,
           value: web3.utils.toWei(data.budget, 'ether')
         });
-        console.log(result)
         await setDoc(doc(collection(getFirestore(), "collaborations"), result.events.CollaborationCreated.returnValues[0]), {
           title: data.title,
           deadline: date,
@@ -100,21 +98,21 @@ const Brand: FC = () => {
 
   }
 
-  const {address = null} = useParams();
-
-  const {data: brand} = useQuery<{}, unknown, IBrand>({
-    queryKey: ['brand', address],
-    queryFn: async (): Promise<IBrand> => fetchBrand(address)
+  const {data: brand = null} = useQuery<{}, unknown, IBrand>({
+    queryKey: ['brand', account],
+    queryFn: async (): Promise<IBrand> => {
+      return fetchBrand(account || null)
+    }
   })
 
-  if (brand === undefined) {
+  if (brand === null) {
     return null;
   }
 
-  return <div className={'p-12 py-[126px] -mt-[96px] bg-gray-100 h-screen'}>
+  return <div className={'p-12 py-[126px] -mt-[96px]  bg-gray-100 min-h-screen'}>
     <h2 className={'text-5xl font-bold'}>{brand.title}</h2>
     <div className={'grid grid-cols-3 mt-12 gap-8'}>
-      <BrandCard title={brand.title} link={brand.link}/>
+      <BrandCard title={brand.title} link={brand.link} image={brand.image}/>
       <Card className={'col-span-1'}>
         <div className={'flex flex-col gap-1'}>
           <span className={'text-2xl font-bold'}>Active collaborations</span>

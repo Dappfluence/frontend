@@ -8,10 +8,10 @@ interface IProps extends IBrand {
   className?: string;
 }
 
-const BrandCard: FC<IProps> = ({children, title, link, className = ''}) => {
+const BrandCard: FC<IProps> = ({children, image, title, link, className = ''}) => {
   return (
     <Card className={'col-span-2'}>
-      <img src={'https://via.placeholder.com/250x70'} alt=""/>
+      <img src={image} className={''} alt=""/>
       <div className={'flex flex-col gap-1'}>
         <span className={'text-sm'}>Company Name</span>
         <h3 className={'text-xl font-bold'}>{title}</h3>

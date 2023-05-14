@@ -1,4 +1,6 @@
 import {DocumentData} from "firebase/firestore";
+import {fetchBrand} from "../../../api/brand";
+import {IBrand} from "../../../shared/types/account";
 
 export enum CollaborationType {
   VIDEO = 'VIDEO',
@@ -17,11 +19,7 @@ export interface ICollaboration {
     start: number, //unix timestamp
     end: number //unix timestamp
   },
-  brand: {
-    title: string
-    link: string,
-    image: string
-  },
+  brand: IBrand,
   content: {
     title: string,
     description: string,
@@ -29,7 +27,8 @@ export interface ICollaboration {
   creator: string,
   tags: string[],
   reward: number,
-  status: TStatus
+  status: TStatus,
+  proposals: string[]
 }
 
 export type TStatus = "CREATED" | "IN_PROGRESS" | "COMPLETED" | "ACCEPTED"
@@ -40,23 +39,16 @@ export interface CollaborationCardProps {
 }
 
 
-export function populateCollaboration(doc: DocumentData): ICollaboration {
+export async function populateCollaboration(doc: DocumentData, entity: any): Promise<ICollaboration> {
   let data = doc
-
-  console.log(data)
   return {
     id: doc.id,
-    type: data.type || "VIDEO",
+    type: data.type || "POST",
     dates: {
       start: data.deadline,
       end: data.deadline
     },
-    brand: {
-      title: "GUCCI",
-      link: "test",
-      image: "https://via.placeholder.com/150x50"
-
-    },
+    brand: await fetchBrand(data.creator),
     content: {
       title: data.title,
       description: data.title
@@ -64,6 +56,7 @@ export function populateCollaboration(doc: DocumentData): ICollaboration {
     creator: data.creator,
     tags: [],
     reward: data.budget,
-    status: 'IN_PROGRESS' //todo
-  }
+    status: "CREATED", //todo,
+    proposals: []
+  } as ICollaboration
 }

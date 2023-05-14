@@ -2,14 +2,14 @@ import {doc, getDoc, getFirestore} from "firebase/firestore";
 import {IBrand} from "../shared/types/account";
 import {faker} from "@faker-js/faker";
 
-export const fetchBrand = async (address: string | null): Promise<IBrand> => {
+export const fetchBrand = async (address: string | null): Promise<IBrand | null> => {
   if (!address) {
-    return {title: '', link: '', image: faker.image.avatar()};
+    return null
   }
   const data = await getDoc(doc(getFirestore(), "accounts", address));
   if (data.exists()) {
     let result = data.data()!;
-    return {title: result.name, link: result.link, image: faker.image.avatar()};
+    return {title: faker.commerce.productName(), link: faker.internet.url(), image: faker.image.urlPicsumPhotos({width: 300, height: 100})};
   }
-  return {title: '', link: '', image: faker.image.avatar()};
+  return null
 }

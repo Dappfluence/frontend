@@ -3,11 +3,15 @@ import {useParams} from "react-router-dom";
 import {useQuery} from "@tanstack/react-query";
 import {getFirestore, doc, getDoc} from "firebase/firestore";
 import {ICollaboration, populateCollaboration} from "../ui/collaborations/components/CollaborationCard.types";
+import Web3 from "web3";
+import {useParticleProvider} from "@particle-network/connect-react-ui";
+import CollaborationABI from "../assets/abi/Collaboration.json";
 
 const Collaboration: FC = () => {
 
   const {id = ''} = useParams();
 
+  const provider = useParticleProvider();
   const {data: collaboration} = useQuery<unknown, unknown, ICollaboration>({
     queryKey: ['collaboration', id],
     queryFn: async () => {
@@ -15,7 +19,11 @@ const Collaboration: FC = () => {
       if (!data.exists() || data.data() === undefined) {
         return undefined
       } else {
-        return populateCollaboration(data.data()!)
+        let web3 = new Web3(provider as any);
+        const contract = new web3.eth.Contract(CollaborationABI, id);
+        const proposals = await contract.methods.proposals().call();
+        console.log(proposals)
+        return populateCollaboration(data.data()!, id)
       }
     }
   });

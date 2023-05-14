@@ -18,11 +18,6 @@ const Header: React.FC = () => {
 
   const account = useAccount();
 
-  const provider = useParticleProvider();
-
-  provider?.on('connect', () => {
-    console.error('connected')
-  })
   useEffect(() => {
     if (!account) return
     const particle = new ParticleNetwork({
@@ -30,7 +25,6 @@ const Header: React.FC = () => {
       clientKey: 'clR7rCoWx6Yv9MzfSCJUGy7ANxiJDRWgVZLSdT5W' as string,
       appId: '6650a17f-78cb-4d7d-9a29-d8c45770acf1' as string,
     });
-    console.log(particle, particle.auth.userInfo())
   }, [account])
 
 
@@ -47,7 +41,7 @@ const Header: React.FC = () => {
         {
           account ? (
             <ConnectButton.Custom>
-              {({ openAccountModal}) => {
+              {({openAccountModal}) => {
                 return (
                   <div className={'flex gap-2 items-center'}>
                     <Dropdown label={shortHandAddress(account ?? '', 5)}>
