@@ -2,64 +2,49 @@ import React from 'react'
 import {RouterProvider} from "react-router-dom";
 import router from "./router";
 import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
-
-import {configureChains, createClient, WagmiConfig} from 'wagmi';
-import {bscTestnet} from "wagmi/chains"
-import {publicProvider} from 'wagmi/providers/public';
 import {ToastContainer} from "react-toastify";
-import {ParticleNetwork} from "@particle-network/auth";
-import {particleWallet} from "@particle-network/rainbowkit-ext";
-import {injectedWallet, metaMaskWallet} from "@rainbow-me/rainbowkit/wallets";
+
+import {BSC, BSCTestnet, Ethereum, EthereumGoerli,} from '@particle-network/common';
 import '@rainbow-me/rainbowkit/styles.css';
-import {connectorsForWallets, RainbowKitProvider} from "@rainbow-me/rainbowkit";
+
+import {ModalProvider} from '@particle-network/connect-react-ui';
+import {WalletEntryPosition} from '@particle-network/auth';
 
 interface IProps {
   queryClient: QueryClient;
 }
 
 const App: React.FC<IProps> = ({queryClient}) => {
-  const particle = new ParticleNetwork({
-    projectId: "1bca8c12-8844-4070-ba8c-9571fc32cba5",
-    clientKey: "clR7rCoWx6Yv9MzfSCJUGy7ANxiJDRWgVZLSdT5W",
-    appId: "6650a17f-78cb-4d7d-9a29-d8c45770acf1",
-  });
-
-  const {chains, provider, webSocketProvider} = configureChains(
-    [bscTestnet],
-    [publicProvider()]
-  );
-  const popularWallets = {
-    groupName: 'Popular',
-    wallets: [
-      particleWallet({chains, authType: 'google'}),
-      particleWallet({chains, authType: 'facebook'}),
-      particleWallet({chains, authType: 'apple'}),
-      particleWallet({chains}),
-      injectedWallet({chains}),
-      metaMaskWallet({chains}),
-    ],
-  };
-
-  const connectors = connectorsForWallets([
-    popularWallets
-  ]);
-
-  const wagmiClient = createClient({
-    autoConnect: true,
-    connectors,
-    provider,
-    webSocketProvider,
-  });
-
 
   return <div className={'w-[100vw] bg-white relative'}>
     <QueryClientProvider client={queryClient}>
-      <WagmiConfig client={wagmiClient}>
-        <RainbowKitProvider chains={chains}>
+      <ModalProvider
+        walletSort={['Particle Auth', 'Wallet']}
+        particleAuthSort={[
+          'twitter',
+        ]}
+        //TODO: get particle config from https://dashboard.particle.network/
+        options={{
+          projectId: '1bca8c12-8844-4070-ba8c-9571fc32cba5' as string,
+          clientKey:  'clR7rCoWx6Yv9MzfSCJUGy7ANxiJDRWgVZLSdT5W' as string,
+          appId: '6650a17f-78cb-4d7d-9a29-d8c45770acf1' as string,
+          chains: [
+            BSC,
+            Ethereum,
+            BSCTestnet,
+          ],
+          particleWalletEntry: {
+            displayWalletEntry: false,
+            defaultWalletEntryPosition: WalletEntryPosition.BR,
+            supportChains: [Ethereum, EthereumGoerli],
+          },
+        }}
+        language="en"
+        theme={'light'}
+      >
           <ToastContainer position={'bottom-right'} theme={'dark'}/>
           <RouterProvider router={router} />
-        </RainbowKitProvider>
-      </WagmiConfig>
+      </ModalProvider>
     </QueryClientProvider>
   </div>
 }

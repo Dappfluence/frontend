@@ -1,28 +1,60 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect} from "react";
 import logo from "../assets/logo.png";
-import {authentication} from "../main";
-import {TwitterAuthProvider, signInWithPopup, onAuthStateChanged, User} from "firebase/auth";
 import {Link} from "react-router-dom";
+import {
+  Chain,
+  ConnectButton,
+  useAccount,
+  useConnectId,
+  useConnectKit,
+  useParticleProvider,
+  useWalletMetas
+} from "@particle-network/connect-react-ui";
+
+import '@particle-network/connect-react-ui/dist/index.css';
+
+import {ParticleNetwork} from "@particle-network/auth";
 
 
 const Header: React.FC = () => {
-  const [user, setUser] = useState<User | null | undefined>(undefined);
-  const loginWithTwitter = () => {
-    const provider = new TwitterAuthProvider();
-    signInWithPopup(authentication, provider).catch(err => {
-      alert(err)
-    })
-  }
-  useEffect(() => {
 
-    onAuthStateChanged(authentication, (user) => {
-      if (user) {
-        setUser(user)
-      } else {
-        setUser(null)
-      }
+  const account = useAccount();
+  const metas = useWalletMetas()
+  const ids = useConnectId()
+  console.log(account, metas, ids)
+  const connectKit = useConnectKit();
+
+  const provider = useParticleProvider();
+
+  useEffect(() => {
+    if (!account) return
+    const particle = new ParticleNetwork({
+      projectId: '1bca8c12-8844-4070-ba8c-9571fc32cba5' as string,
+      clientKey: 'clR7rCoWx6Yv9MzfSCJUGy7ANxiJDRWgVZLSdT5W' as string,
+      appId: '6650a17f-78cb-4d7d-9a29-d8c45770acf1' as string,
     });
-  }, [])
+    console.log(particle, particle.auth.userInfo())
+  }, [account])
+
+  useEffect(() => {
+    async function chainChanged(chain?: Chain) {
+      console.log('DEMO-onChainChanged：', chain);
+    }
+
+    if (connectKit) {
+      connectKit.on('chainChanged', chainChanged);
+      connectKit.on('accountsChanged', (accounts) => {
+        console.log(accounts)
+      });
+      connectKit.on('connect', (a) => {
+        console.log(a)
+      });
+      return () => {
+        connectKit.removeListener('chainChanged', chainChanged);
+      };
+    }
+  }, [connectKit]);
+
 
   return <div className={'mb-[96px]'}>
     <div
@@ -32,25 +64,19 @@ const Header: React.FC = () => {
         <h1 className={'text-2xl'}>CollabY</h1>
       </div>
       <div>
-        {user !== undefined ? (
-          user ? (
+        {
+          account ? (
             <div className={'flex gap-2 items-center'}>
-              <div className={'w-8 h-8 overflow-hidden rounded-full'}>
-                <img src={user.photoURL || ''} alt=""/>
-              </div>
               <h1>
                 <Link to='/me'>
-                  {user.displayName}
+                  {account}
                 </Link>
               </h1>
             </div>
           ) : (
-            <button className={'text-white p-2 border rounded-lg'} onClick={loginWithTwitter}>Login with
-              Twitter</button>
+            <ConnectButton/>
           )
-        ) : (
-          <h1>Implement skeleton here</h1>
-        )}
+        }
       </div>
     </div>
   </div>
