@@ -197,12 +197,13 @@ const InfluencerProfile: FC = () => {
                       </div>
                     ))}
                 </div>
-                <Link to={"/collaborations"}><Button className={'mt-4'}>Search More</Button></Link></>
+                </>
 
             ) : (
               <p className={'mt-4 text-gray-400 text-base'}>Here will be a calendar of your active collaborations with
                 coming deadlines </p>
             )}
+            <Link to={"/collaborations"}><Button className={'mt-4'}>Search More</Button></Link>
 
           </Card>
         </div>

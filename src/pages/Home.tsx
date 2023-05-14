@@ -13,12 +13,6 @@ const Home: React.FC = () => {
 
   console.error(address)
 
-  useEffect(() => {
-    if (address) {
-      navigate('/me')
-    }
-  }, [address])
-
   return <div className={'mt-[-96px] w-full min-h-[100vh] pt-[96px]'}>
     <div
       className={'absolute top-0 left-0 w-full min-h-[690px] z-10 rounded-[50px] rounded-t-none overflow-hidden bg-gradient-to-r from-purple-dark to-purple-light'}>
