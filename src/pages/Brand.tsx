@@ -1,4 +1,4 @@
-import React, {FC} from 'react'
+import React, {FC, useState} from 'react'
 import Card from "../ui/brand/components/Card";
 import WalletCard from "../ui/brand/components/WalletCard";
 import BrandCard from "../ui/brand/components/BrandCard";
@@ -8,8 +8,20 @@ import {Link, useParams} from "react-router-dom";
 import {useQuery} from "@tanstack/react-query";
 import {fetchBrand} from "../api/brand";
 import {IBrand} from "../shared/types/account";
+import CreateCollaborationModal from "../widgets/CreateCollaborationModal";
 
 const Brand: FC = () => {
+  const [modalOpen, setModalOpen] = useState(false);
+  const onClose = () => {
+    setModalOpen(false)
+  }
+  const onOpen = () => {
+    setModalOpen(true);
+  }
+
+  const sumbitModal = () => {
+    console.log('submit');
+  }
 
   const {address = null} = useParams();
 
@@ -43,9 +55,8 @@ const Brand: FC = () => {
 
     </div>
     <Footer>
-      <Link to={'/collaboration/new'}>
-        <Button>Create new collaboration</Button>
-      </Link>
+      <Button onClick={onOpen}>Create new collaboration</Button>
+      <CreateCollaborationModal onClose={onClose} isOpen={modalOpen} onSubmit={sumbitModal}/>
     </Footer>
   </div>
 }
