@@ -27,8 +27,11 @@ export interface ICollaboration {
   creator: string,
   tags: string[],
   reward: number,
-  status: TStatus,
-  proposals: string[]
+  proposals: string[],
+  accepted?: boolean,
+  inProgress?: boolean,
+  powProvided?: boolean,
+  finished?: boolean
 }
 
 export type TStatus = "CREATED" | "IN_PROGRESS" | "COMPLETED" | "ACCEPTED"
@@ -56,7 +59,6 @@ export async function populateCollaboration(doc: DocumentData, entity?: any): Pr
     creator: data.creator,
     tags: [],
     reward: data.budget,
-    status: "CREATED", //todo,
     proposals: []
   } as ICollaboration
 }

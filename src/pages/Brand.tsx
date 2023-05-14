@@ -39,7 +39,6 @@ const Brand: FC = () => {
         const inProgress = await contract.methods.workInProgress().call();
         const powProvided = await contract.methods.powProvided().call();
         const finished = await contract.methods.finished().call();
-        console.log(accepted, inProgress, powProvided, finished)
         let brand = await fetchBrand(e.creator)
         return {
           id: e.id,
@@ -49,7 +48,10 @@ const Brand: FC = () => {
           brand: brand,
           tags: [],
           content: {title: e.title, description: e.title},
-
+          accepted: accepted,
+          inProgress: inProgress,
+          powProvided: powProvided,
+          finished: finished
         } as ICollaboration
       }))
       setLoading(false)
@@ -116,7 +118,11 @@ const Brand: FC = () => {
       <Card className={'col-span-1'}>
         <div className={'flex flex-col gap-1'}>
           <span className={'text-2xl font-bold'}>Active collaborations</span>
-          <p className={'text-gray-400'}>Here will be a brief information about your active collaborations</p>
+          {loading ? <ArrowPathIcon className={'w-6 h-6 animate-spin'}/> :
+            collabs.length === 0 ?
+              <p className={'text-gray-400'}>Here will be a detailed information about your active
+                collaborations</p> : collabs.filter((a) => a.accepted).map((collab, index) => <Collaboration
+                collaboration={collab} key={index}/>)}
         </div>
       </Card>
       <Card className={'col-span-2'}>

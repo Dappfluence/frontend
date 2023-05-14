@@ -6,19 +6,21 @@ interface Props {
   proposals: Array<IInfluencer>;
   onApprove: (address: string) => void;
   onDeny: (address: string) => void;
-
+  approvable?: boolean
 }
 
-const ProposalsBlock: FC<Props> = ({proposals, onApprove, onDeny}) => {
+const ProposalsBlock: FC<Props> = ({proposals, onApprove, onDeny, approvable = true}) => {
   return (
     <div className={'mt-8'}>
-      <h3 className={'text-lg font-bold'}>{proposals.length} New candidates</h3>
+      <h3 className={'text-lg font-bold'}>{proposals.length} candidates</h3>
 
       <div className={'mt-4'}>
         {proposals.map((proposal, index) => (
           <div key={index}>
             <Proposal name={proposal.name} email={proposal.email} address={proposal.address}
-                      photoURL={proposal.photoURL} onDeny={onDeny} onApprove={onApprove}/>
+                      photoURL={proposal.photoURL} approved={proposals.findIndex(e => e.approved) >= 0}
+                      approvable={approvable} onDeny={onDeny}
+                      onApprove={onApprove}/>
             <hr/>
           </div>
         ))}

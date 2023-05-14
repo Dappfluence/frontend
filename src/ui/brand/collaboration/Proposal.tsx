@@ -6,20 +6,33 @@ interface Props extends IInfluencer {
   onDeny: (address: string) => void;
   onApprove: (address: string) => void;
   address: string;
+  approved?: boolean,
+  approvable?: boolean
 }
 
-const Proposal: FC<Props> = ({email, name, photoURL, onDeny, onApprove, address}) => {
+const Proposal: FC<Props> = ({
+                               email,
+                               name,
+                               photoURL,
+                               onDeny,
+                               onApprove,
+                               address,
+                               approved = false,
+                               approvable = true
+                             }) => {
   const navigate = useNavigate()
   return (
-    <div className={'flex py-3 items-center'} >
-      <div className={'rounded-full w-[64px] h-[64px] flex items-center justify-center overflow-hidden border cursor-pointer'} onClick={() => navigate('/influencer/' + address)}>
+    <div className={'flex py-3 items-center'}>
+      <div
+        className={'rounded-full w-[64px] h-[64px] flex items-center justify-center overflow-hidden border cursor-pointer'}
+        onClick={() => navigate('/influencer/' + address)}>
         <img src={photoURL} alt={name}/>
       </div>
       <div className={'grow ml-4 cursor-pointer'} onClick={() => navigate('/influencer/' + address)}>
         <h4 className={'text-base font-semibold'}>{name}</h4>
         <p className={'text-xs'}>{email}</p>
       </div>
-      <div className={'flex gap-2'}>
+      {approvable && <div className={'flex gap-2'}>
         <button className={'px-4 py-2 text-red-700 border border-red-700 rounded-xl'}
                 onClick={() => onDeny(address)}>Deny
         </button>
@@ -27,7 +40,7 @@ const Proposal: FC<Props> = ({email, name, photoURL, onDeny, onApprove, address}
                 onClick={() => onApprove(address)}>Approve
         </button>
 
-      </div>
+      </div>}
     </div>
   );
 };

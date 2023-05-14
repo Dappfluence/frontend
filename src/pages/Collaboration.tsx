@@ -15,6 +15,7 @@ import ApplyForCollaborationModal from "../widgets/ApplyForCollaborationModal";
 import FactoryABI from "../assets/abi/Factory.json";
 import {toast} from "react-toastify";
 import {fetchInfluencer} from "../api/influencer";
+import {fetchBrand} from "../api/brand";
 
 
 const Collaboration: FC = () => {
@@ -25,17 +26,29 @@ const Collaboration: FC = () => {
   const provider = useParticleProvider();
 
   const [proposals, setProposals] = useState<any[]>([])
-  const {data: collaboration, refetch} = useQuery<unknown, unknown, ICollaboration>({
+  const {data: collaboration = null, refetch} = useQuery<unknown, unknown, ICollaboration>({
     queryKey: ['collaboration', id],
     queryFn: async () => {
       let data = await getDoc(doc(getFirestore(), 'collaborations', id))
-      if (!data.exists() || data.data() === undefined) {
-        return undefined
+      if (!data.exists() || data.data() === undefined || !provider) {
+        return null
       } else {
-        return populateCollaboration(data.data()!, id)
+        let web3 = new Web3(provider as any);
+        const contract = new web3.eth.Contract(CollaborationABI, id);
+        const accepted = await contract.methods.proposalAccepted().call();
+        const inProgress = await contract.methods.workInProgress().call();
+        const powProvided = await contract.methods.powProvided().call();
+        const finished = await contract.methods.finished().call();
+        console.error(accepted)
+        let doc = await populateCollaboration(data.data()!, id)
+
+        return {...doc, accepted, inProgress, powProvided, finished} as ICollaboration
       }
     }
   });
+  useEffect(() => {
+    if (provider) refetch()
+  }, [provider])
   const [isApplicationModalOpen, setIsApplicationModalOpen] = useState(false);
 
   const handleApplicationModalOpen = () => {
@@ -98,26 +111,27 @@ const Collaboration: FC = () => {
   const handleApprove = async (a) => {
     let web3 = new Web3(provider as any);
     const contract = new web3.eth.Contract(CollaborationABI, id);
+    let index = 0;
+    for (let i = 0; i < proposals.length; i++) {
+      if (proposals[i].address === a) {
+        index = i;
+        break;
+      }
+    }
+
     await toast.promise(async () => {
-      // try {
-      //   let result = await contract.methods.createCollaboration(date).send({
-      //     from: account,
-      //     value: web3.utils.toWei(data.budget, 'ether')
-      //   });
-      //   await setDoc(doc(collection(getFirestore(), "collaborations"), result.events.CollaborationCreated.returnValues[0]), {
-      //     title: data.title,
-      //     deadline: date,
-      //     budget: data.budget,
-      //     creator: account
-      //   });
-      // } catch (e) {
-      //   console.log(e)
-      //   throw new Error(e)
-      // }
+      try {
+        await contract.methods.acceptProposal(index).send({
+          from: account,
+        });
+      } catch (e) {
+        console.log(e)
+        throw new Error(e)
+      }
     }, {
       error: 'Error',
-      pending: 'Creating collaboration...',
-      success: 'Collaboration created!',
+      pending: 'Accepting proposal...',
+      success: 'Proposal accepted!',
     })
     console.log(a)
   }
@@ -209,9 +223,10 @@ const Collaboration: FC = () => {
           {!isCurrentUserOwner ? (
             <RepresentativeBlock representatives={proposals}/>
           ) : (
-            <ProposalsBlock onDeny={(a) => {
-              alert('deny ' + a)
-            }} onApprove={handleApprove} proposals={proposals}/>
+            <ProposalsBlock approvable={!collaboration.finished && !collaboration.inProgress && !collaboration.accepted}
+                            onDeny={(a) => {
+                              alert('deny ' + a)
+                            }} onApprove={handleApprove} proposals={proposals}/>
           )}
 
         </div>
