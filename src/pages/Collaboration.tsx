@@ -41,7 +41,7 @@ const Collaboration: FC = () => {
   const {data: collaboration = null} = useQuery<unknown, unknown, ICollaboration>({
     queryKey: ['collaboration', id],
     queryFn: async () => {
-      let data = await getDoc(doc(getFirestore(), 'collaborations', id.toLowerCase()))
+      let data = await getDoc(doc(getFirestore(), 'collaborations', id))
       if (!data.exists() || data.data() === undefined) {
         return null
       } else {
@@ -190,7 +190,7 @@ const Collaboration: FC = () => {
           from: account,
         });
         await queryClient.invalidateQueries(['collaboration', id])
-        await updateDoc(doc(getFirestore(), 'collaborations', id.toLowerCase()), {approved: a});
+        await updateDoc(doc(getFirestore(), 'collaborations', id), {approved: a});
       } catch (e) {
         console.log(e)
       }

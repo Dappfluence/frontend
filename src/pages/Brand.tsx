@@ -32,7 +32,7 @@ const Brand: FC = () => {
     if (!account) return;
     let web3 = new Web3(provider as any);
     setLoading(true)
-    let listener = onSnapshot(query(collection(getFirestore(), "collaborations"), where("creator", '==', account.toLowerCase())), async (snapshot) => {
+    let listener = onSnapshot(query(collection(getFirestore(), "collaborations"), where("creator", '==', account)), async (snapshot) => {
       let colls = await Promise.all(snapshot.docs.map((doc) => ({id: doc.id, ...doc.data()})).map(async (e: any) => {
         // @ts-ignore
         const contract = new web3.eth.Contract(CollaborationABI, e.id);
@@ -88,7 +88,7 @@ const Brand: FC = () => {
           from: account,
           value: web3.utils.toWei(data.budget.toString(), 'ether')
         });
-        await setDoc(doc(collection(getFirestore(), "collaborations"), result.events.CollaborationCreated.returnValues[0].toLowerCase()), {
+        await setDoc(doc(collection(getFirestore(), "collaborations"), result.events.CollaborationCreated.returnValues[0]), {
           title: data.title,
           deadline: date,
           budget: data.budget,
