@@ -1,4 +1,4 @@
-import React, {FC, useEffect, useState} from 'react';
+import React, {FC, useEffect} from 'react';
 import Card from "../ui/influencer_profile/components/card";
 import EditIcon from "../assets/icons/EditIcon";
 import TwitterFilled from "../assets/icons/TwitterFilled";
@@ -8,7 +8,7 @@ import relativeTime from 'dayjs/plugin/relativeTime';
 import {Link} from "react-router-dom";
 import {IInfluencer} from "../shared/types/account";
 import {useQuery} from "@tanstack/react-query";
-import {ConnectButton, useAccount, useParticleProvider} from "@particle-network/connect-react-ui";
+import {useAccount, useParticleProvider} from "@particle-network/connect-react-ui";
 import {fetchInfluencer} from "../api/influencer";
 import {ICollaboration} from "../ui/collaborations/components/CollaborationCard.types";
 import {fetchCollaborations} from "../api/account";

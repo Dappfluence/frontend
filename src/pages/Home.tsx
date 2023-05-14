@@ -1,7 +1,7 @@
-import React, {useEffect} from "react";
+import React from "react";
 import backgroundImage from "../assets/background.png";
 import grid from "../assets/grid.png";
-import {Button, Tabs} from "flowbite-react";
+import {Button} from "flowbite-react";
 import homeSectionBg from "../assets/home-section-bg.png"
 import {useAccount} from "@particle-network/connect-react-ui";
 import {Link, useNavigate} from "react-router-dom";
@@ -9,7 +9,6 @@ import {Link, useNavigate} from "react-router-dom";
 const Home: React.FC = () => {
 
   const address = useAccount()
-  const navigate = useNavigate()
 
   console.error(address)
 
