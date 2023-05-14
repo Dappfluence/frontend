@@ -4,7 +4,6 @@ import router from "./router";
 import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
 
 import {BSCTestnet,} from '@particle-network/common';
-import '@rainbow-me/rainbowkit/styles.css';
 
 import {ModalProvider} from '@particle-network/connect-react-ui';
 import {WalletEntryPosition} from "@particle-network/auth";

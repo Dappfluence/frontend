@@ -1,8 +1,4 @@
 import React from "react";
-import {ConnectButton} from '@rainbow-me/rainbowkit';
-import logo from "../assets/logo.png";
-import {Button} from "flowbite-react";
-import {Link} from "react-router-dom";
 
 interface IProps {
   children?: React.ReactNode;
