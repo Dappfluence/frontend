@@ -1,5 +1,4 @@
 import React, {FC} from 'react';
-import Representative from "./Representative";
 import {IInfluencer} from "../../../shared/types/account";
 import Proposal from "./Proposal";
 

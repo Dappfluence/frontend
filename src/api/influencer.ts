@@ -1,6 +1,5 @@
 import {doc, getDoc, getFirestore} from "firebase/firestore";
 import {IInfluencer} from "../shared/types/account";
-import {httpsCallable, getFunctions} from "firebase/functions";
 import {faker} from "@faker-js/faker";
 
 export const fetchInfluencer = async (address: string): Promise<IInfluencer> => {

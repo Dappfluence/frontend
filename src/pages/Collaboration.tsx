@@ -3,7 +3,6 @@ import {useParams} from "react-router-dom";
 import {useQuery} from "@tanstack/react-query";
 import {getFirestore, doc, getDoc} from "firebase/firestore";
 import {ICollaboration, populateCollaboration} from "../ui/collaborations/components/CollaborationCard.types";
-import Representative from "../ui/brand/collaboration/Representative";
 import RepresentativeBlock from "../ui/brand/collaboration/RepresentativeBlock";
 import {useAccount} from "@particle-network/connect-react-ui";
 import ProposalsBlock from "../ui/brand/collaboration/ProposalsBlock";
