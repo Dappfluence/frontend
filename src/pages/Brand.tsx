@@ -71,7 +71,7 @@ const Brand: FC = () => {
   const submitModal = async (data) => {
     if (account === undefined) return;
     let web3 = new Web3(provider as any);
-    const contract = new web3.eth.Contract(FactoryABI, "0x63f0c55Ec58d9d1f21D639079358fe0C18c83876");
+    const contract = new web3.eth.Contract(FactoryABI, "0xb644986c9f3ed0F49d064c54052847B17fD0E0b1");
     let date = new Date(data.deadline).getTime() / 1000;
     setModalOpen(false)
     await toast.promise(async () => {

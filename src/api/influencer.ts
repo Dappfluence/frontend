@@ -6,8 +6,7 @@ export const fetchInfluencer = async (address: string): Promise<IInfluencer> => 
   const data = await getDoc(doc(getFirestore(), "accounts", address));
   if (data.exists()) {
     let result = data.data()!;
-    return {name: result.name, email: result.email, photoURL: faker.image.avatar(), address};
+    return {name: faker.string.sample(), email: result.email, photoURL: faker.image.avatar(), address};
   }
-  return {name: '', email: ''};
 
 }

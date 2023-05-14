@@ -3,6 +3,7 @@ import {populateCollaboration} from "../ui/collaborations/components/Collaborati
 import {useQuery} from "@tanstack/react-query";
 import CollaborationCard from "../ui/collaborations/components/CollaborationCard";
 import {getDocs, collection, getFirestore} from 'firebase/firestore'
+import collaborationCard from "../ui/collaborations/components/CollaborationCard";
 
 const Collaborations: FC = () => {
 
@@ -10,7 +11,7 @@ const Collaborations: FC = () => {
     queryKey: ['collaborations'],
     queryFn: async () => {
       let data = await getDocs(collection(getFirestore(), 'collaborations'))
-      return data.docs.map(e => populateCollaboration(e.data()))
+      return Promise.all(data.docs.map(e => populateCollaboration({id: e.id, ...e.data()})))
     },
   })
 
@@ -21,7 +22,7 @@ const Collaborations: FC = () => {
       </h1>
 
       <div className={'grid grid-cols-2 gap-4 py-5'}>
-        {data.map((collaboration) => <div className={'col-span-1'}>
+        {data.map((collaboration, index) => <div key={index} className={'col-span-1'}>
           <CollaborationCard collaboration={collaboration}/>
         </div>)}
       </div>

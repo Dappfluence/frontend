@@ -41,9 +41,7 @@ const data = {
 dayjs.extend(relativeTime);
 
 const InfluencerProfile: FC = () => {
-
   const account = useAccount();
-
   const {data: user} = useQuery<{}, unknown, IInfluencer>({
     queryKey: ['influencer', account],
     queryFn: async (): Promise<IInfluencer> => fetchInfluencer(account!)

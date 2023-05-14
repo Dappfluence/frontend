@@ -223,6 +223,31 @@
     "type": "function"
   },
   {
+    "inputs": [],
+    "name": "getProposals",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "string",
+            "name": "info",
+            "type": "string"
+          },
+          {
+            "internalType": "address",
+            "name": "influencer",
+            "type": "address"
+          }
+        ],
+        "internalType": "struct Collaboration.Proposal[]",
+        "name": "",
+        "type": "tuple[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "inputs": [
       {
         "internalType": "uint256",

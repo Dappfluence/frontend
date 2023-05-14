@@ -39,7 +39,7 @@ export interface CollaborationCardProps {
 }
 
 
-export async function populateCollaboration(doc: DocumentData, entity: any): Promise<ICollaboration> {
+export async function populateCollaboration(doc: DocumentData, entity?: any): Promise<ICollaboration> {
   let data = doc
   return {
     id: doc.id,
