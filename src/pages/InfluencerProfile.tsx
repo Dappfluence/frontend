@@ -83,7 +83,8 @@ const InfluencerProfile: FC = () => {
               data.accounts.length > 0 && (
                 <div className={'mt-4 w-full flex-col'}>
                   {data.accounts.map((account, index) => (
-                    <div key={index} className='grow py-4 px-6 rounded-lg border border-blue-200 flex justify-between items-center'>
+                    <div key={index}
+                         className='grow py-4 px-6 rounded-lg border border-blue-200 flex justify-between items-center'>
 
                       <div className={'flex gap-2 items-center'}>
                         <TwitterFilled/>
@@ -117,7 +118,8 @@ const InfluencerProfile: FC = () => {
 
                 {
                   data.collaboration.past.map((collab, index) => (
-                    <div key={index} className='grow p-6 rounded-lg border border-blue-200 flex justify-between items-center gap-4'>
+                    <div key={index}
+                         className='grow p-6 rounded-lg border border-blue-200 flex justify-between items-center gap-4'>
 
                       <div>
                         <img src={collab.brand.image} alt={collab.brand.title}/>
@@ -161,7 +163,8 @@ const InfluencerProfile: FC = () => {
 
                 {
                   data.collaboration.active.map((collab, index) => (
-                    <div key={index} className='grow p-6 rounded-lg border border-blue-200 flex justify-between items-center gap-4'>
+                    <div key={index}
+                         className='grow p-6 rounded-lg border border-blue-200 flex justify-between items-center gap-4'>
 
                       <div>
                         <img src={collab.brand.image} alt={collab.brand.title}/>

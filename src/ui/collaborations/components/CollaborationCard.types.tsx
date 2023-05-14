@@ -10,7 +10,7 @@ export enum CollaborationType {
   TELEGRAM_POST = 'TELEGRAM_POST'
 }
 
-export interface Collaboration {
+export interface ICollaboration {
   id: string
   type: CollaborationType,
   dates: {
@@ -27,35 +27,41 @@ export interface Collaboration {
     description: string,
   },
   tags: string[],
-  reward: number
+  reward: number,
+  status: TStatus
 }
+
+export type TStatus = "CREATED" | "IN_PROGRESS" | "COMPLETED" | "ACCEPTED"
 
 
 export interface CollaborationCardProps {
-  collaboration: Collaboration
+  collaboration: ICollaboration
 }
 
 
-export function populateCollaboration(doc: DocumentData): Collaboration {
+export function populateCollaboration(doc: DocumentData): ICollaboration {
   let data = doc
+
+  console.log(data)
   return {
     id: doc.id,
-    type: data.type,
+    type: data.type || "VIDEO",
     dates: {
-      start: data.dates.start,
-      end: data.dates.end
+      start: data.deadline,
+      end: data.deadline
     },
     brand: {
-      title: data.brand.title,
-      link: data.brand.link,
-      image: data.brand.image
+      title: "GUCCI",
+      link: "test",
+      image: "https://via.placeholder.com/150x50"
 
     },
     content: {
-      title: data.content.title,
-      description: data.content.description
+      title: data.title,
+      description: data.title
     },
-    tags: data.tags,
-    reward: data.reward
+    tags: [],
+    reward: data.budget,
+    status: 'IN_PROGRESS' //todo
   }
 }

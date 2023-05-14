@@ -1,6 +1,6 @@
-import React, { FC } from 'react';
-import { useForm } from 'react-hook-form';
-import { Modal } from 'flowbite-react';
+import React, {FC} from 'react';
+import {useForm} from 'react-hook-form';
+import {Modal} from 'flowbite-react';
 
 interface Props {
   isOpen: boolean;
@@ -14,8 +14,8 @@ interface FormData {
   deadline: string;
 }
 
-const CreateCollaborationModal: FC<Props> = ({ isOpen, onClose, onSubmit }) => {
-  const { register, handleSubmit, formState: {errors}, reset } = useForm<FormData>();
+const CreateCollaborationModal: FC<Props> = ({isOpen, onClose, onSubmit}) => {
+  const {register, handleSubmit, formState: {errors}, reset} = useForm<FormData>();
 
   const handleClose = () => {
     reset();
@@ -27,10 +27,10 @@ const CreateCollaborationModal: FC<Props> = ({ isOpen, onClose, onSubmit }) => {
 
   return (
     <Modal show={isOpen} onClose={handleClose} size="3xl" popup={true}>
-      <Modal.Header className="bg-white" />
+      <Modal.Header className="bg-white"/>
       <Modal.Body className="bg-white">
         <div className="p-8">
-          <h3 className="mb-8 text-3xl font-thin">Create new proposal</h3>
+          <h3 className="mb-8 text-3xl font-thin">Request new Collaboration</h3>
 
           <form onSubmit={onFormSubmit}>
             <div className="flex flex-col gap-4 mb-8">
@@ -39,7 +39,7 @@ const CreateCollaborationModal: FC<Props> = ({ isOpen, onClose, onSubmit }) => {
                 <input
                   placeholder={'e.g: Engaging twitter post featuring... '}
                   type="text"
-                  {...register('title', { required: true })}
+                  {...register('title', {required: true})}
                   className="border rounded-lg p-2"
                 />
                 {errors.title && <span className={'text-red-700'}>This field is required.</span>}
@@ -49,18 +49,17 @@ const CreateCollaborationModal: FC<Props> = ({ isOpen, onClose, onSubmit }) => {
                 <span className="text-base">Collaboration budget:</span>
                 <div className="flex gap-4 items-center">
                   <input
-                    type="number"
-                    placeholder={'Enter the value above 100'}
-                    {...register('budget', { required: true, min: 100 })}
+                    placeholder={'Enter the value above 0.00001'}
+                    {...register('budget', {required: true})}
                     className="border rounded-lg w-1/2 p-2"
                   />
-                  <span>Wei</span>
+                  <span>tBNB</span>
                 </div>
                 {errors.budget && errors.budget.type === 'required' && (
                   <span className={'text-red-700'}>This field is required.</span>
                 )}
                 {errors.budget && errors.budget.type === 'min' && (
-                  <span className={'text-red-700'}>Minimum value is 100.</span>
+                  <span className={'text-red-700'}>Minimum value is 0.00001.</span>
                 )}
               </label>
 
@@ -68,7 +67,7 @@ const CreateCollaborationModal: FC<Props> = ({ isOpen, onClose, onSubmit }) => {
                 <span className="text-base">Collaboration due:</span>
                 <input
                   type="date"
-                  {...register('deadline', { required: true })}
+                  {...register('deadline', {required: true})}
                   className="border rounded-lg p-2"
                   min={new Date().toISOString().split('T')[0]}
                 />
@@ -79,12 +78,12 @@ const CreateCollaborationModal: FC<Props> = ({ isOpen, onClose, onSubmit }) => {
             <div className="flex justify-end gap-4">
               <button
                 type="submit"
-                className="py-2 px-4 text-green-700 border border-green-700 rounded-xl disabled:cursor-not-allowed disabled:text-gray-400 disabled:border-gray-400"
+                className="py-2 px-4 text-green-700 border border-green-700 uppercase rounded-xl disabled:cursor-not-allowed disabled:text-gray-400 disabled:border-gray-400"
               >
                 submit
               </button>
               <button
-                className="py-2 px-4 text-blue-700 border border-blue-700 rounded-xl"
+                className="py-2 px-4 text-red-700 uppercase border border-red-700 rounded-xl"
                 onClick={handleClose}
               >
                 close

@@ -21,6 +21,8 @@ const firebaseConfig = {
   appId: "1:378671163511:web:2f3c5b31d98c03be2cfe72"
 };
 
+import "react-toastify/dist/ReactToastify.min.css"
+
 // Initialize Firebase
 initializeApp(firebaseConfig);
 
@@ -29,7 +31,7 @@ export const queryClient = new QueryClient();
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
-    <ToastContainer position={'bottom-right'} theme={'dark'}/>
+    <ToastContainer className={'z-50'} position={'bottom-right'} theme={'dark'}/>
     <App queryClient={queryClient}/>
   </React.StrictMode>,
 )

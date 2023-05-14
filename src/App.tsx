@@ -7,11 +7,12 @@ import {BSC, BSCTestnet, Ethereum, EthereumGoerli,} from '@particle-network/comm
 import '@rainbow-me/rainbowkit/styles.css';
 
 import {ModalProvider} from '@particle-network/connect-react-ui';
-import {WalletEntryPosition} from '@particle-network/auth';
+import {createConfig, WagmiConfig} from "wagmi";
 
 interface IProps {
   queryClient: QueryClient;
 }
+
 
 const App: React.FC<IProps> = ({queryClient}) => {
 

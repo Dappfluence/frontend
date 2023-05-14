@@ -2,13 +2,13 @@ import React, {FC} from 'react';
 import {useParams} from "react-router-dom";
 import {useQuery} from "@tanstack/react-query";
 import {getFirestore, doc, getDoc} from "firebase/firestore";
-import {Collaboration as Collab, populateCollaboration} from "../ui/collaborations/components/CollaborationCard.types";
+import {ICollaboration, populateCollaboration} from "../ui/collaborations/components/CollaborationCard.types";
 
 const Collaboration: FC = () => {
 
   const {id = ''} = useParams();
 
-  const {data: collaboration} = useQuery<unknown, unknown, Collab>({
+  const {data: collaboration} = useQuery<unknown, unknown, ICollaboration>({
     queryKey: ['collaboration', id],
     queryFn: async () => {
       let data = await getDoc(doc(getFirestore(), 'collaborations', id))
