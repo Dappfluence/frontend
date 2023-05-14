@@ -28,6 +28,7 @@ export interface ICollaboration {
   tags: string[],
   reward: number,
   proposals: string[],
+  approved?: string,
   accepted?: boolean,
   inProgress?: boolean,
   powProvided?: boolean,
@@ -59,6 +60,7 @@ export async function populateCollaboration(doc: DocumentData): Promise<ICollabo
     creator: data.creator,
     tags: [],
     reward: data.budget,
-    proposals: []
+    proposals: [],
+    approved: data.approved,
   } as ICollaboration
 }

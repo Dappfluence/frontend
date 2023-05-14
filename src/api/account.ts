@@ -21,13 +21,8 @@ export const setType = async (address: string, type: TAccountType) => {
 
 export const fetchCollaborations = async (address: string, provider: any): Promise<ICollaboration[]> => {
   if (!provider || !address) return [];
-
   let docs = await getDocs(query(collection(getFirestore(), "collaborations"), where("approved", "==", address)));
-
-  console.log("docs", );
-
   return Promise.all(docs.docs.map(e => ({id: e.id, ...e.data()})).map(populateCollaboration))
-
 }
 
 

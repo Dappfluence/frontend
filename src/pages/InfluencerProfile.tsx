@@ -12,6 +12,7 @@ import {ConnectButton, useAccount, useParticleProvider} from "@particle-network/
 import {fetchInfluencer} from "../api/influencer";
 import {ICollaboration} from "../ui/collaborations/components/CollaborationCard.types";
 import {fetchCollaborations} from "../api/account";
+import {Button} from "flowbite-react";
 
 const pastCollaboration = {
   id: 123,
@@ -169,31 +170,34 @@ const InfluencerProfile: FC = () => {
           <Card>
             <h3 className={'text-2xl font-bold'}>{activeCollaborations.length} Active collaborations</h3>
             {activeCollaborations.length > 0 ? (
-              <div className={'mt-4 w-full flex gap-2 flex-col'}>
-                {
-                  activeCollaborations.map((collab, index) => (
-                    <div key={index}
-                         className='grow p-6 rounded-lg border border-blue-200 flex justify-between items-center gap-4'>
-                      <div>
-                        <img src={collab.brand.image} alt={collab.brand.title}/>
+              <>
+                <div className={'mt-4 w-full flex gap-2 flex-col'}>
+                  {
+                    activeCollaborations.map((collab, index) => (
+                      <div key={index}
+                           className='grow p-6 rounded-lg border border-blue-200 flex justify-between items-center gap-4'>
+                        <div>
+                          <img src={collab.brand.image} alt={collab.brand.title}/>
+                        </div>
+                        <div>
+                          <p className={'flex gap-3 text-xs'}>
+                            {collab.tags.map(tag => (
+                              <span key={tag}>{tag}</span>
+                            ))}
+                          </p>
+                          <h4 className={'text-lg font-extrabold mt-1'}>
+                            {collab.brand.title}
+                          </h4>
+                        </div>
+                        <div>
+                          <h4 className={'whitespace-nowrap text-lg font-extrabold'}>{collab.reward}tBnB</h4>
+                          <Link to={`/collaboration/${collab.id}`}><span
+                            className={'text-base font-bold text-blue-700'}>View more</span></Link>
+                        </div>
                       </div>
-                      <div>
-                        <p className={'flex gap-3 text-xs'}>
-                          {collab.tags.map(tag => (
-                            <span key={tag}>{tag}</span>
-                          ))}
-                        </p>
-                        <h4 className={'text-lg font-extrabold mt-1'}>
-                          {collab.brand.title}
-                        </h4>
-                      </div>
-                      <div>
-                        <h4 className={'whitespace-nowrap text-lg font-extrabold'}>{collab.reward}tBnB</h4>
-                        <Link to={`/collaboration/${collab.id}`}><span className={'text-base font-bold text-blue-700'}>View more</span></Link>
-                      </div>
-                    </div>
-                  ))}
-              </div>
+                    ))}
+                </div>
+                <Link to={"/collaborations"}><Button className={'mt-4'}>Search More</Button></Link></>
 
             ) : (
               <p className={'mt-4 text-gray-400 text-base'}>Here will be a calendar of your active collaborations with

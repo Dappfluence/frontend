@@ -16,6 +16,7 @@ import FactoryABI from "../assets/abi/Factory.json";
 import {toast} from "react-toastify";
 import {fetchInfluencer} from "../api/influencer";
 import {fetchBrand} from "../api/brand";
+import {CheckCircleIcon, CheckIcon, ClockIcon} from "@heroicons/react/24/outline";
 
 
 const representatives = [{
@@ -44,7 +45,7 @@ const Collaboration: FC = () => {
       if (!data.exists() || data.data() === undefined) {
         return null
       } else {
-        return populateCollaboration(data.data()!, id)
+        return populateCollaboration(data.data()!)
       }
     }
   });
@@ -103,8 +104,9 @@ const Collaboration: FC = () => {
 
   }
 
-  useEffect(() => {
+  console.log(collaboration)
 
+  useEffect(() => {
     if (provider) {
       fetchProposals()
     }
@@ -115,11 +117,7 @@ const Collaboration: FC = () => {
     const contract = new web3.eth.Contract(CollaborationABI, id);
     const proposals = await contract.methods.getProposals().call();
     let result = await Promise.all(proposals.map(e => e[1]).map(fetchInfluencer))
-
-    console.log(result)
-
     setProposals(result)
-
   }
   useEffect(() => {
     if (collaboration?.creator === account) {
@@ -159,6 +157,74 @@ const Collaboration: FC = () => {
       success: 'Proposal accepted!',
     })
     console.log(a)
+  }
+
+  const handleApproveWork = async () => {
+    let web3 = new Web3(provider as any);
+    const contract = new web3.eth.Contract(CollaborationABI, id);
+
+    await toast.promise(async () => {
+      try {
+        await contract.methods.approveWork().send({
+          from: account,
+        });
+        await queryClient.invalidateQueries(['collaboration', id])
+      } catch (e) {
+        console.log(e)
+        throw new Error(e)
+      }
+    }, {
+      error: 'Error',
+      pending: 'Approving work...',
+      success: 'Work approved!',
+    })
+    console.log(a)
+  }
+
+  const renderBrandFooter = () => {
+    if (status.finished) {
+      return <>
+        <div>
+          <p className={'text-xs'}>Proposals:</p>
+          <h1 className={'text-lg font-bold'}>{proposals.length} Candidates</h1>
+        </div>
+        <div className={'text-3xl text-sky-700 uppercase'}>
+          <CheckCircleIcon className={'w-12 h-12'}/>
+        </div>
+      </>
+    }
+    if (status.accepted && !status.powProvided) {
+      return <>
+        <div>
+          <p className={'text-xs'}>Proposals:</p>
+          <h1 className={'text-lg font-bold'}>{proposals.length} Candidates</h1>
+        </div>
+        <div className={'flex flex-row items-center gap-2'}>
+          <span>Waiting for work</span>
+          <ClockIcon className={'w-12 h-12 text-sky-700 animate-spin'}/>
+        </div>
+
+      </>
+    }
+    if (status.accepted && status.powProvided) {
+      return <>
+        <div>
+          <p className={'text-xs'}>Proposals:</p>
+          <h1 className={'text-lg font-bold'}>{proposals.length} Candidates</h1>
+        </div>
+        <div className={'flex flex-row items-end gap-2'}>
+          <Button outline={true} color={'red'} onClick={() => alert('gfys')}>Request Changes</Button>
+          <Button onClick={handleApproveWork}>Approve Work</Button>
+        </div>
+      </>
+    }
+    return <>
+      <div>
+        <p className={'text-xs'}>Proposals:</p>
+        <h1 className={'text-lg font-bold'}>{proposals.length} Candidates</h1>
+      </div>
+      <div/>
+    </>
   }
 
   if (!collaboration) return null;
@@ -256,27 +322,23 @@ const Collaboration: FC = () => {
 
 
           {!isCurrentUserOwner && collaboration.status === 'CREATED' && (
-              <div className={'mt-8 p-2 border rounded-lg border-green-600 bg-green-50'}>
-                <h3 className={'text-lg font-black'}>
-                  Proof of work
-                </h3>
-                <p className={'text-xs mt-2'}>
-                  Lorem ipsum dolor sit amet, consectetur adipisicing elit. Cupiditate doloremque et ex exercitationem laborum nam nobis qui recusandae rerum vero. Asperiores beatae consectetur eveniet ex explicabo, labore odit rem sequi.
-                </p>
-              </div>
-            )
+            <div className={'mt-8 p-2 border rounded-lg border-green-600 bg-green-50'}>
+              <h3 className={'text-lg font-black'}>
+                Proof of work
+              </h3>
+              <p className={'text-xs mt-2'}>
+                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Cupiditate doloremque et ex exercitationem
+                laborum nam nobis qui recusandae rerum vero. Asperiores beatae consectetur eveniet ex explicabo, labore
+                odit rem sequi.
+              </p>
+            </div>
+          )
           }
         </div>
 
         <Footer>
           {isCurrentUserOwner ? (
-            <>
-              <div>
-                <p className={'text-xs'}>Proposals:</p>
-                <h1 className={'text-lg font-bold'}>{proposals.length} Candidates</h1>
-              </div>
-              <div />
-            </>
+            renderBrandFooter()
           ) : (
             <>
               <div>
