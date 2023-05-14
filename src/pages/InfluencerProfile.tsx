@@ -169,13 +169,11 @@ const InfluencerProfile: FC = () => {
           <Card>
             <h3 className={'text-2xl font-bold'}>{activeCollaborations.length} Active collaborations</h3>
             {activeCollaborations.length > 0 ? (
-              <div className={'mt-4 w-full flex-col'}>
-
+              <div className={'mt-4 w-full flex gap-2 flex-col'}>
                 {
                   activeCollaborations.map((collab, index) => (
                     <div key={index}
                          className='grow p-6 rounded-lg border border-blue-200 flex justify-between items-center gap-4'>
-
                       <div>
                         <img src={collab.brand.image} alt={collab.brand.title}/>
                       </div>
