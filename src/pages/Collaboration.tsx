@@ -1,7 +1,7 @@
 import React, {FC, useEffect, useState} from 'react';
 import {useParams} from "react-router-dom";
 import {useQuery} from "@tanstack/react-query";
-import {getFirestore, doc, getDoc} from "firebase/firestore";
+import {getFirestore, doc, getDoc, setDoc, collection} from "firebase/firestore";
 import {ICollaboration, populateCollaboration} from "../ui/collaborations/components/CollaborationCard.types";
 import {useParticleProvider} from "@particle-network/connect-react-ui";
 import RepresentativeBlock from "../ui/brand/collaboration/RepresentativeBlock";
@@ -12,6 +12,9 @@ import Web3 from "web3";
 import Footer from "../widgets/Footer";
 import {Button} from "flowbite-react";
 import ApplyForCollaborationModal from "../widgets/ApplyForCollaborationModal";
+import FactoryABI from "../assets/abi/Factory.json";
+import {toast} from "react-toastify";
+import {fetchInfluencer} from "../api/influencer";
 
 
 const Collaboration: FC = () => {
@@ -21,7 +24,7 @@ const Collaboration: FC = () => {
 
   const provider = useParticleProvider();
 
-  const [representatives, setRepresentatives] = useState<any[]>([])
+  const [proposals, setProposals] = useState<any[]>([])
   const {data: collaboration, refetch} = useQuery<unknown, unknown, ICollaboration>({
     queryKey: ['collaboration', id],
     queryFn: async () => {
@@ -29,7 +32,6 @@ const Collaboration: FC = () => {
       if (!data.exists() || data.data() === undefined) {
         return undefined
       } else {
-
         return populateCollaboration(data.data()!, id)
       }
     }
@@ -44,8 +46,26 @@ const Collaboration: FC = () => {
     setIsApplicationModalOpen(false);
   }
 
-  const handleApplicationModalSubmit = () => {
-    alert(`Proposal ${account}`);
+  const handleApplicationModalSubmit = async (data) => {
+    if (account === undefined) return;
+    let web3 = new Web3(provider as any);
+    const contract = new web3.eth.Contract(CollaborationABI, id);
+    setIsApplicationModalOpen(false)
+    await toast.promise(async () => {
+      try {
+        await contract.methods.createProposal(data.skills).send({
+          from: account,
+        });
+      } catch (e) {
+        console.log(e)
+        throw new Error(e)
+      }
+    }, {
+      error: 'Error',
+      pending: 'Creating proposal...',
+      success: 'Proposal created!',
+    })
+
   }
 
   useEffect(() => {
@@ -59,11 +79,13 @@ const Collaboration: FC = () => {
     let web3 = new Web3(provider as any);
     const contract = new web3.eth.Contract(CollaborationABI, id);
     const proposals = await contract.methods.getProposals().call();
-    console.log(proposals)
+    let result = await Promise.all(proposals.map(e => e[1]).map(fetchInfluencer))
+
+    console.log(result)
+
+    setProposals(result)
+
   }
-
-  console.log(collaboration, account)
-
   useEffect(() => {
     if (collaboration?.creator === account) {
       setIsCurrentUserOwner(true)
@@ -72,6 +94,33 @@ const Collaboration: FC = () => {
     }
   }, [collaboration])
 
+
+  const handleApprove = async (a) => {
+    let web3 = new Web3(provider as any);
+    const contract = new web3.eth.Contract(CollaborationABI, id);
+    await toast.promise(async () => {
+      // try {
+      //   let result = await contract.methods.createCollaboration(date).send({
+      //     from: account,
+      //     value: web3.utils.toWei(data.budget, 'ether')
+      //   });
+      //   await setDoc(doc(collection(getFirestore(), "collaborations"), result.events.CollaborationCreated.returnValues[0]), {
+      //     title: data.title,
+      //     deadline: date,
+      //     budget: data.budget,
+      //     creator: account
+      //   });
+      // } catch (e) {
+      //   console.log(e)
+      //   throw new Error(e)
+      // }
+    }, {
+      error: 'Error',
+      pending: 'Creating collaboration...',
+      success: 'Collaboration created!',
+    })
+    console.log(a)
+  }
 
   if (!collaboration) return null;
 
@@ -158,17 +207,11 @@ const Collaboration: FC = () => {
           </div>
 
           {!isCurrentUserOwner ? (
-            <RepresentativeBlock representatives={representatives}/>
+            <RepresentativeBlock representatives={proposals}/>
           ) : (
             <ProposalsBlock onDeny={(a) => {
               alert('deny ' + a)
-            }} onApprove={(a) => {
-              alert('approve ' + a)
-            }} proposals={representatives.map(repr => ({
-              ...repr,
-              address: '123',
-              photoURL: 'https://via.placeholder.com/150x150'
-            }))}/>
+            }} onApprove={handleApprove} proposals={proposals}/>
           )}
 
         </div>
