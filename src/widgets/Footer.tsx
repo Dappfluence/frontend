@@ -10,10 +10,8 @@ interface IProps {
 
 const Footer: React.FC<IProps> = ({children}) => {
   return <div
-    className={'fixed z-20 bottom-0 left-0  text-white w-full h-[96px] items-center flex flex-row justify-end py-6 px-20 bg-black rounded-[50px] rounded-b-none'}>
-    <div>
+    className={'fixed z-20 bottom-0 left-0  text-white w-full h-[64px] items-center flex flex-row justify-between py-6 px-20 bg-black rounded-[50px] rounded-b-none'}>
       {children}
-    </div>
   </div>
 }
 

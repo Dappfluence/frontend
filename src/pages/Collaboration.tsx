@@ -9,6 +9,9 @@ import CollaborationABI from "../assets/abi/Collaboration.json";
 import RepresentativeBlock from "../ui/brand/collaboration/RepresentativeBlock";
 import {useAccount} from "@particle-network/connect-react-ui";
 import ProposalsBlock from "../ui/brand/collaboration/ProposalsBlock";
+import Footer from "../widgets/Footer";
+import {Button} from "flowbite-react";
+import ApplyForCollaborationModal from "../widgets/ApplyForCollaborationModal";
 
 
 const representatives = [{
@@ -31,6 +34,20 @@ const Collaboration: FC = () => {
   const account = useAccount();
 
   const provider = useParticleProvider();
+  const [isApplicationModalOpen, setIsApplicationModalOpen] = useState(false);
+
+  const handleApplicationModalOpen = () => {
+    setIsApplicationModalOpen(true);
+  }
+
+  const handleApplicationModalClose = () => {
+    setIsApplicationModalOpen(false);
+  }
+
+  const handleApplicationModalSubmit = () => {
+    alert(`Proposal ${account}`);
+  }
+
   const {data: collaboration} = useQuery<unknown, unknown, ICollaboration>({
     queryKey: ['collaboration', id],
     queryFn: async () => {
@@ -46,6 +63,7 @@ const Collaboration: FC = () => {
       }
     }
   });
+
 
   useEffect(() => {
     if (collaboration?.creator === account) {
@@ -156,6 +174,20 @@ const Collaboration: FC = () => {
 
         </div>
 
+        <Footer>
+          {isCurrentUserOwner ? (123) : (
+            <>
+              <div>
+                <p className={'text-xs'}>Renumeration:</p>
+                <h1 className={'text-base font-bold'}>1tBNB</h1>
+              </div>
+              <div>
+                <Button onClick={handleApplicationModalOpen}>Apply for this collaboration</Button>
+                <ApplyForCollaborationModal collaborationAuthor={collaboration.brand.title} isOpen={isApplicationModalOpen} onClose={handleApplicationModalClose} onSubmit={handleApplicationModalSubmit} />
+              </div>
+            </>
+          )}
+        </Footer>
       </div>
     </div>
   );
