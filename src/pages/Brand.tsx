@@ -14,7 +14,7 @@ import {useAccount, useAccountInfo, useParticleConnect, useParticleProvider} fro
 import Web3 from "web3";
 import {toast} from "react-toastify";
 import {ICollaboration} from "../ui/collaborations/components/CollaborationCard.types";
-import {addDoc, collection, doc, getFirestore, query, where, onSnapshot, setDoc} from "firebase/firestore";
+import {addDoc, collection, doc, getFirestore, query, where, onSnapshot, setDoc, getDoc} from "firebase/firestore";
 import {Collaboration} from "../shared/ui/Collaboration";
 import {ArrowPathIcon} from "@heroicons/react/24/outline";
 
@@ -41,13 +41,13 @@ const Brand: FC = () => {
         const powProvided = await contract.methods.powProvided().call();
         const finished = await contract.methods.finished().call();
         console.log(accepted, inProgress, powProvided, finished)
-
+        let brand = fetchBrand(e.creator)
         return {
           id: e.id,
           type: e.type || "POST",
           reward: e.budget,
           dates: {start: e.deadline, end: e.deadline},
-          brand: {title: "Gucci", image: "https://via.placeholder.com/150x50", link: "https://www.gucci.com"},
+          brand: brand,
           tags: [],
           content: {title: e.title, description: e.title},
 
@@ -112,9 +112,9 @@ const Brand: FC = () => {
   }
 
   return <div className={'p-12 py-[126px] -mt-[96px] bg-gray-100 h-screen'}>
-    <h2 className={'text-5xl font-bold'}>{brand.name}</h2>
+    <h2 className={'text-5xl font-bold'}>{brand.title}</h2>
     <div className={'grid grid-cols-3 mt-12 gap-8'}>
-      <BrandCard name={brand.name} link={brand.link}/>
+      <BrandCard title={brand.title} link={brand.link}/>
       <Card className={'col-span-1'}>
         <div className={'flex flex-col gap-1'}>
           <span className={'text-2xl font-bold'}>Active collaborations</span>
@@ -125,7 +125,7 @@ const Brand: FC = () => {
         <div className={'flex flex-col w-full gap-1'}>
           <span className={'text-2xl font-bold'}>Collaborations</span>
           <div className={'w-full flex flex-col items-center gap-2 justify-center'}>
-            {loading ? <ArrowPathIcon className={'w-6 h-6 animate-spin'} /> :
+            {loading ? <ArrowPathIcon className={'w-6 h-6 animate-spin'}/> :
               collabs.length === 0 ?
                 <p className={'text-gray-400'}>Here will be a detailed information about your collaborations, as soon as
                   your first one will be created</p> : collabs.map((collab, index) => <Collaboration

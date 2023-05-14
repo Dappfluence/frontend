@@ -26,6 +26,7 @@ export interface ICollaboration {
     title: string,
     description: string,
   },
+  creator: string,
   tags: string[],
   reward: number,
   status: TStatus
@@ -60,6 +61,7 @@ export function populateCollaboration(doc: DocumentData): ICollaboration {
       title: data.title,
       description: data.title
     },
+    creator: data.creator,
     tags: [],
     reward: data.budget,
     status: 'IN_PROGRESS' //todo

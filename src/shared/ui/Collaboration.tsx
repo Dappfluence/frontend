@@ -5,15 +5,14 @@ import {Link} from "react-router-dom";
 
 interface IProps {
   collaboration: ICollaboration,
-  key: any
 }
 
-export const Collaboration: FC<IProps> = ({collaboration: collab, key}) => {
+export const Collaboration: FC<IProps> = ({collaboration: collab}) => {
 
 
 
   return (
-    <div key={key}
+    <div
          className='grow p-6 rounded-lg border border-blue-200 w-full flex justify-between items-center gap-4'>
       <div>
         <img src={collab.brand.image} alt={collab.brand.title}/>

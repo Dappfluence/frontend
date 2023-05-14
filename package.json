@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@chainlink/contracts": "^0.6.1",
+    "@faker-js/faker": "^8.0.0",
     "@heroicons/react": "^2.0.17",
     "@particle-network/auth": "^0.13.0",
     "@particle-network/connect-react-ui": "^0.13.0",
