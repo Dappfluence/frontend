@@ -208,7 +208,7 @@ const Collaboration: FC = () => {
         </div>
 
 
-        <div>
+        <div className={'w-[45%]'}>
 
           <h3 className={'text-lg font-bold'}>Main Requirements</h3>
 
@@ -240,6 +240,18 @@ const Collaboration: FC = () => {
                             }} onApprove={handleApprove} proposals={proposals}/>
           )}
 
+
+          {!isCurrentUserOwner && collaboration.status === 'CREATED' && (
+              <div className={'mt-8 p-2 border rounded-lg border-green-600 bg-green-50'}>
+                <h3 className={'text-lg font-black'}>
+                  Proof of work
+                </h3>
+                <p className={'text-xs mt-2'}>
+                  Lorem ipsum dolor sit amet, consectetur adipisicing elit. Cupiditate doloremque et ex exercitationem laborum nam nobis qui recusandae rerum vero. Asperiores beatae consectetur eveniet ex explicabo, labore odit rem sequi.
+                </p>
+              </div>
+            )
+          }
         </div>
 
         <Footer>
@@ -255,7 +267,7 @@ const Collaboration: FC = () => {
             <>
               <div>
                 <p className={'text-xs'}>Renumeration:</p>
-                <h1 className={'text-base font-bold'}>1tBNB</h1>
+                <h1 className={'text-base font-bold'}>{collaboration.reward}tBNB</h1>
               </div>
               <div>
                 <Button onClick={handleApplicationModalOpen}>Apply for this collaboration</Button>
