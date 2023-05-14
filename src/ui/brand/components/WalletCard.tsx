@@ -1,7 +1,7 @@
 import React, {FC} from 'react';
 import Card from "./Card";
-import {ConnectButton} from "@rainbow-me/rainbowkit";
 import {useAccount, useBalance} from "wagmi";
+import {ConnectButton} from "@particle-network/connect-react-ui";
 
 interface IProps {
   children?: React.ReactNode;

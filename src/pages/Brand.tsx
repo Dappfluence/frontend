@@ -1,20 +1,20 @@
 import React, {FC} from 'react'
-import Card from "../ui/company/components/Card";
-import WalletCard from "../ui/company/components/WalletCard";
-import BrandCard from "../ui/company/components/BrandCard";
+import Card from "../ui/brand/components/Card";
+import WalletCard from "../ui/brand/components/WalletCard";
+import BrandCard from "../ui/brand/components/BrandCard";
 import Footer from "../widgets/Footer";
 import {Button} from "flowbite-react";
 import {Link, useParams} from "react-router-dom";
 import {useQuery} from "@tanstack/react-query";
-import {IBrand} from "../ui/company/components/BrandCard.types";
-import {fetchBrand} from "../api/company";
+import {fetchBrand} from "../api/brand";
+import {IBrand} from "../shared/types/account";
 
 const Brand: FC = () => {
 
   const {address = null} = useParams();
 
   const {data: brand} = useQuery<{}, unknown, IBrand>({
-    queryKey: ['company', address],
+    queryKey: ['brand', address],
     queryFn: async (): Promise<IBrand> => fetchBrand(address)
   })
 

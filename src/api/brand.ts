@@ -1,5 +1,5 @@
 import {doc, getDoc, getFirestore} from "firebase/firestore";
-import {IBrand} from "../ui/company/components/BrandCard.types";
+import {IBrand} from "../shared/types/account";
 
 export const fetchBrand = async (address: string): Promise<IBrand> => {
   const data = await getDoc(doc(getFirestore(), "accounts", address));

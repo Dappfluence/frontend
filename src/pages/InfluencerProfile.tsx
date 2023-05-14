@@ -6,8 +6,10 @@ import InfoStack from "../shared/ui/InfoStack";
 import dayjs from "dayjs";
 import relativeTime from 'dayjs/plugin/relativeTime';
 import {Link} from "react-router-dom";
-import {ConnectButton} from "@rainbow-me/rainbowkit";
-import {onAuthStateChanged, User} from "firebase/auth";
+import {IInfluencer} from "../shared/types/account";
+import {useQuery} from "@tanstack/react-query";
+import {ConnectButton, useAccount} from "@particle-network/connect-react-ui";
+import {fetchInfluencer} from "../api/influencer";
 
 const pastCollaboration = {
   id: 123,
@@ -39,7 +41,13 @@ const data = {
 dayjs.extend(relativeTime);
 
 const InfluencerProfile: FC = () => {
-  const [user, setUser] = useState<User | null | undefined>(undefined);
+
+  const account = useAccount();
+
+  const {data: user} = useQuery<{}, unknown, IInfluencer>({
+    queryKey: ['influencer', account],
+    queryFn: async (): Promise<IInfluencer> => fetchInfluencer(account!)
+  })
 
   return (
     <div className={'container mx-auto mt-[144px] '}>
@@ -146,10 +154,6 @@ const InfluencerProfile: FC = () => {
         </div>
 
         <div className={'flex flex-col gap-5 w-[35%]'}>
-          <Card className={'py-[76px] flex justify-center items-center'}>
-            <ConnectButton/>
-          </Card>
-
           <Card>
             <h3 className={'text-2xl font-bold'}>{data.collaboration.active.length} Active collaborations</h3>
             {data.collaboration.active.length > 0 ? (

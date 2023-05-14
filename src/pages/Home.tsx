@@ -1,10 +1,24 @@
-import React from "react";
+import React, {useEffect} from "react";
 import backgroundImage from "../assets/background.png";
 import grid from "../assets/grid.png";
 import {Button} from "flowbite-react";
 import homeSectionBg from "../assets/home-section-bg.png"
+import {useAccount} from "@particle-network/connect-react-ui";
+import {useNavigate} from "react-router-dom";
 
 const Home: React.FC = () => {
+
+  const address = useAccount()
+  const navigate = useNavigate()
+
+  console.error(address)
+
+  useEffect(() => {
+    if (address) {
+      navigate('/me')
+    }
+  }, [address])
+
   return <div className={'mt-[-96px] w-full min-h-[100vh] pt-[96px]'}>
     <div
       className={'absolute top-0 left-0 w-full min-h-[690px]  z-0 rounded-[50px] rounded-t-none overflow-hidden bg-gradient-to-r from-purple-dark to-purple-light'}>

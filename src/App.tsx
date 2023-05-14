@@ -32,9 +32,7 @@ const App: React.FC<IProps> = ({queryClient}) => {
             BSCTestnet,
           ],
           particleWalletEntry: {
-            displayWalletEntry: true,
-            defaultWalletEntryPosition: WalletEntryPosition.BR,
-            supportChains: [BSCTestnet],
+            displayWalletEntry: false,
           },
         }}
         language="en"

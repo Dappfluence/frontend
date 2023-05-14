@@ -1,7 +1,7 @@
 import React, {FC} from 'react';
 import {PencilIcon} from "@heroicons/react/24/outline";
 import Card from "./Card";
-import {IBrand} from "./BrandCard.types";
+import {IBrand} from "../../../shared/types/account";
 
 interface IProps extends IBrand {
   children?: React.ReactNode;
