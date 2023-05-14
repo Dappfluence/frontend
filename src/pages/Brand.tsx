@@ -15,7 +15,7 @@ const Brand: FC = () => {
 
   const {data: brand} = useQuery<{}, unknown, IBrand>({
     queryKey: ['brand', address],
-    queryFn: async (): Promise<IBrand> => fetchBrand(address)
+    queryFn: async (): Promise<IBrand> => fetchBrand(address!)
   })
 
   if (brand === undefined) {

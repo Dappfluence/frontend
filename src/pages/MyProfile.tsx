@@ -34,7 +34,7 @@ export const MyProfile: FC = () => {
 
   if (type === 'brand') return <Brand/>
   if (type === 'influencer') return <InfluencerProfile/>
-  if (type === 'unknown') return <div className={'text-center'}>
+  return <div className={'text-center'}>
     <h2 className={'text-5xl py-16'}>Who are you?</h2>
     <div className={classNames(' flex flex-row justify-center gap-12')}>
       <Card className={'w-1/3 text-3xl cursor-pointer hover:text-blue-500 hover:shadow transition-all duration-200'}

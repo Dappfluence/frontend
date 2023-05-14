@@ -7,4 +7,6 @@ export const fetchInfluencer = async (address: string): Promise<IInfluencer> => 
     let result = data.data()!;
     return {name: result.name, email: result.email};
   }
+  return {name: '', email: ''};
+
 }

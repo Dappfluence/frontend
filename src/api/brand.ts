@@ -7,4 +7,5 @@ export const fetchBrand = async (address: string): Promise<IBrand> => {
     let result = data.data()!;
     return {name: result.name, link: result.link};
   }
+  return {name: '', link: ''};
 }
