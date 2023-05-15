@@ -5,6 +5,7 @@ import {Button} from "flowbite-react";
 import homeSectionBg from "../assets/home-section-bg.png"
 import {useAccount} from "@particle-network/connect-react-ui";
 import {Link, useNavigate} from "react-router-dom";
+import BenefitTabs from "../ui/home/component";
 
 const Home: React.FC = () => {
 
@@ -20,8 +21,8 @@ const Home: React.FC = () => {
       <div className={'w-full h-full absolute bg-cover opacity-50 '} style={{backgroundImage: `url(${grid})`}}></div>
     </div>
     <div className={' md:max-w-[80vw] md:p-24 md:pr-12 text-white flex flex-col gap-4 z-[10]'}>
-      <h1 className={'text-6xl font-bold z-10 '}>Dappfluence</h1>
-      <h3 className={'text-2xl z-10'}>Connect with Influential Bloggers and Build Your Brand with Dappfluence</h3>
+      <h1 className={'text-6xl font-bold z-10 '}>CollabY</h1>
+      <h3 className={'text-2xl z-10'}>Collaborate. Create. Explore the Web3 Influence Realm.</h3>
       <p className={'text-base font-normal z-10'}>
         Welcome to CollabY, your gateway to the thrilling world of the Web3 Creator Economy! Discover the power of
         collaboration and trend-setting as we redefine digital influence. <br/><br/>
@@ -33,31 +34,18 @@ const Home: React.FC = () => {
       </p>
       <Button className={'w-48 z-10'}><Link to={'/collaborations'}>Get Started</Link></Button>
     </div>
-    <div className={' -mt-24 bg-opacity-90 bg-cover w-full min-h-[100vh] absolute'}
-         style={{backgroundImage: `url(${homeSectionBg})`}}>
+    <div className={' -mt-24 bg-opacity-90 bg-cover w-full min-h-[130vh] absolute'}
+         style={{backgroundImage: `url(${homeSectionBg})`, filter: 'brightness(40%)'}}>
     </div>
     <div className={'container mx-auto z-20 relative text-white'}>
       <h1 className={'mt-[132px] text-5xl font-extrabold '}>So, what are the benefits?</h1>
       <div className={'mt-[94px] flex justify-between'}>
-        {/*<div>*/}
+        <div>
 
-        {/*  <div className={'p-4 border border-blue-700'}>*/}
-        {/*  <Tabs.Group*/}
-        {/*    aria-label="Pills"*/}
-        {/*    style="pills"*/}
-        {/*  >*/}
-        {/*    <Tabs.Item*/}
-        {/*      active={true}*/}
-        {/*      className={'bg-red-900'}*/}
-        {/*      title="Influencer"*/}
-        {/*     />*/}
-        {/*    <Tabs.Item title="Brands" />*/}
-
-        {/*  </Tabs.Group>*/}
-        {/*  </div>*/}
+          <BenefitTabs />
 
 
-        {/*</div>*/}
+        </div>
 
         <div></div>
       </div>
