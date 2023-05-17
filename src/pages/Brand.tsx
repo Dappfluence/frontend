@@ -74,22 +74,27 @@ const Brand: FC = () => {
     title: string;
     budget: number;
     deadline: string;
+    start: string;
+    description: string;
   }) => {
     if (account === undefined) return;
     let web3 = new Web3(provider as any);
     // @ts-ignore
     const contract = new web3.eth.Contract(FactoryABI, "0xb644986c9f3ed0F49d064c54052847B17fD0E0b1");
-    let date = new Date(data.deadline).getTime() / 1000;
+    let startDate = new Date(data.start).getTime() / 1000;
+    let deadlineDate = new Date(data.deadline).getTime() / 1000;
     setModalOpen(false)
     await toast.promise(async () => {
       try {
-        let result = await contract.methods.createCollaboration(date).send({
+        let result = await contract.methods.createCollaboration(deadlineDate).send({
           from: account,
           value: web3.utils.toWei(data.budget.toString(), 'ether')
         });
         await setDoc(doc(collection(getFirestore(), "collaborations"), result.events.CollaborationCreated.returnValues[0]), {
           title: data.title,
-          deadline: date,
+          description: data.description,
+          start: startDate,
+          deadline: deadlineDate,
           budget: data.budget,
           creator: account
         });
@@ -119,7 +124,7 @@ const Brand: FC = () => {
   return <div className={'p-12 py-[126px] -mt-[96px]  bg-gray-100 min-h-screen  bg-contain'} style={{backgroundImage: `url(${binaryBg})`}}>
     <h2 className={'text-5xl font-bold'}>{brand.title}</h2>
     <div className={'grid grid-cols-3 mt-12 gap-8'}>
-      <BrandCard title={brand.title} link={brand.link} image={brand.image}/>
+      <BrandCard address={account} title={brand.title} link={brand.link} image={brand.image}/>
       <Card className={'col-span-1'}>
         <div className={'flex flex-col gap-1'}>
           <span className={'text-2xl font-bold'}>Active collaborations</span>

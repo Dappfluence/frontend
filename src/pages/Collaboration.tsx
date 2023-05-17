@@ -1,12 +1,11 @@
 import React, {FC, useEffect, useState} from 'react';
 import {useParams} from "react-router-dom";
 import {useQuery, useQueryClient} from "@tanstack/react-query";
-import {getFirestore, doc, getDoc, updateDoc} from "firebase/firestore";
+import {getFirestore, doc, getDoc} from "firebase/firestore";
 import {ICollaboration, populateCollaboration} from "../ui/collaborations/components/CollaborationCard.types";
 import {useConnectModal, useParticleProvider} from "@particle-network/connect-react-ui";
 import RepresentativeBlock from "../ui/brand/collaboration/RepresentativeBlock";
 import {useAccount} from "@particle-network/connect-react-ui";
-import ProposalsBlock from "../ui/brand/collaboration/ProposalsBlock";
 import CollaborationABI from "../assets/abi/Collaboration.json"
 import Web3 from "web3";
 import Footer from "../widgets/Footer";
@@ -14,8 +13,9 @@ import {Button} from "flowbite-react";
 import ApplyForCollaborationModal from "../widgets/ApplyForCollaborationModal";
 import {toast} from "react-toastify";
 import {fetchInfluencer} from "../api/influencer";
-import {ArrowPathIcon, CheckCircleIcon, ClockIcon} from "@heroicons/react/24/outline";
+import {ArrowPathIcon} from "@heroicons/react/24/outline";
 import UploadWorkModal from "../widgets/UploadWorkModal";
+import OwnerView from "../ui/brand/collaboration/OwnerView";
 
 
 const representatives = [{
@@ -152,7 +152,6 @@ const Collaboration: FC = () => {
   }, [provider])
 
 
-
   const fetchProposals = async () => {
     let web3 = new Web3(provider as any);
 
@@ -179,36 +178,6 @@ const Collaboration: FC = () => {
 
 
   const queryClient = useQueryClient();
-  const handleApprove = async (a: string) => {
-    let web3 = new Web3(provider as any);
-    // @ts-ignore
-    const contract = new web3.eth.Contract(CollaborationABI, id);
-    let index = 0;
-    for (let i = 0; i < proposals.length; i++) {
-      if (proposals[i].address === a) {
-        index = i;
-        break;
-      }
-    }
-
-    await toast.promise(async () => {
-      try {
-        await contract.methods.acceptProposal(index).send({
-          from: account,
-        });
-        await queryClient.invalidateQueries(['collaboration', id])
-        await updateDoc(doc(getFirestore(), 'collaborations', id), {approved: a});
-
-        fetchStatus();
-      } catch (e) {
-        throw new Error((e as {message: string}).message);
-      }
-    }, {
-      error: 'Error',
-      pending: 'Accepting proposal...',
-      success: 'Proposal accepted!',
-    })
-  }
 
   const handleApproveWork = async () => {
     let web3 = new Web3(provider as any);
@@ -223,7 +192,7 @@ const Collaboration: FC = () => {
         await queryClient.invalidateQueries(['collaboration', id])
         fetchStatus();
       } catch (e) {
-        throw new Error((e as {message: string}).message);
+        throw new Error((e as { message: string }).message);
       }
     }, {
       error: 'Error',
@@ -232,59 +201,9 @@ const Collaboration: FC = () => {
     })
   }
 
-  const renderBrandFooter = () => {
-    if(statusLoading) {
-      return <ArrowPathIcon className={'w-6 h-6 animate-spin'}/>
-    }
-
-    if (status.finished) {
-      return <>
-        <div>
-          <p className={'text-xs'}>Proposals:</p>
-          <h1 className={'text-lg font-bold'}>{proposals.length} Candidates</h1>
-        </div>
-        <div className={'text-xl text-green-600 flex gap-4 items-center'}>
-          <h1>The collaboration is finished</h1>
-          <CheckCircleIcon className={'w-12 h-12'}/>
-        </div>
-      </>
-    }
-    if(status.accepted) {
-      if (!status.powProvided) {
-        return <>
-          <div>
-            <p className={'text-xs'}>Proposals:</p>
-            <h1 className={'text-lg font-bold'}>{proposals.length} Candidates</h1>
-          </div>
-          <div className={'flex flex-row items-center gap-2'}>
-            <span>Waiting for work</span>
-            <ClockIcon className={'w-12 h-12 text-sky-700 animate-spin'}/>
-          </div>
-
-        </>
-      } else {
-        return <>
-          <div>
-            <p className={'text-xs'}>Proposals:</p>
-            <h1 className={'text-lg font-bold'}>{proposals.length} Candidates</h1>
-          </div>
-          <div className={'flex flex-row items-end gap-2'}>
-            <Button outline={true} color={'red'} onClick={() => alert('gfys')}>Request Changes</Button>
-            <Button onClick={handleApproveWork}>Approve Work</Button>
-          </div>
-        </>
-      }
-    }
-    return <>
-      <div>
-        <p className={'text-xs'}>Proposals:</p>
-        <h1 className={'text-lg font-bold'}>{proposals.length} Candidates</h1>
-      </div>
-      <div/>
-    </>
-  }
-
   if (!collaboration) return null;
+
+  if (isCurrentUserOwner) return <OwnerView/>
 
   return (
     <div className={'mt-[144px] container mx-auto mb-[100px]'}>
@@ -315,7 +234,7 @@ const Collaboration: FC = () => {
           </div>
         </div>
         <div className={'grow w-1/2 flex items-center justify-center'}>
-          <img src={collaboration.brand.image} alt=""/>
+          <img className={'w-full'} src={collaboration.brand.image} alt=""/>
         </div>
       </div>
 
@@ -324,22 +243,11 @@ const Collaboration: FC = () => {
         <div className={'w-[45%]'}>
 
           <h3 className={'text-lg font-bold'}>
-            Create an Engaging Video Featuring Gucci Products!
+            {collaboration.content.title}
           </h3>
 
           <p className={'text-lg mt-4'}>
-            We're looking for fashion and style influencers to create a sponsored video showcasing our latest
-            collection. Your video should feature one or more of our products from this collection in an authentic and
-            engaging way, while also highlighting the unique history and significance behind this collection. For
-            example, you could create a lookbook video featuring our new collection, or film a tutorial on how to style
-            our products.
-            <br/>
-            <br/>
-            For this video collaboration, we're specifically looking for influencers who can showcase their unique style
-            and creativity while featuring our Bamboo 1947 Collection. You should highlight the versatility and elegance
-            of the collection by incorporating it into your everyday life, whether that's through creating a lookbook, a
-            day-in-the-life vlog, or any other creative video concept that showcases our products and the Gucci
-            lifestyle.
+            {collaboration.content.description}
           </p>
 
         </div>
@@ -349,7 +257,7 @@ const Collaboration: FC = () => {
 
           <h3 className={'text-lg font-bold'}>Main Requirements</h3>
 
-          <div className={'mt-4 flex gap-6'}>
+          <div className={'mt-5 flex gap-6'}>
             <div>
               <p className={'text-xs'}>Platform:</p>
               <p className={'text-base font-semibold mt-1'}>YouTube</p>
@@ -362,100 +270,69 @@ const Collaboration: FC = () => {
               <p className={'text-xs'}>Account Age:</p>
               <p className={'text-base font-semibold mt-1'}>{'>'} 2 years</p>
             </div>
-            <div>
-              <p className={'text-xs'}>Amount of videos:</p>
-              <p className={'text-base font-semibold mt-1'}>{'>'} 1 000</p>
-            </div>
           </div>
 
-          {!isCurrentUserOwner ? (
+          <div className={'mt-8'}>
             <RepresentativeBlock representatives={representatives}/>
-          ) : (
-            <ProposalsBlock statusLoading={statusLoading} approvable={!status.finished && !status.inProgress && !status.accepted}
-                            onDeny={(a) => {
-                              alert('deny ' + a)
-                            }} onApprove={handleApprove} proposals={proposals}/>
-          )}
+          </div>
 
-
-          {/*{!isCurrentUserOwner && (*/}
-          {/*  <div className={'mt-8 p-2 border rounded-lg border-green-600 bg-green-50'}>*/}
-          {/*    <h3 className={'text-lg font-black'}>*/}
-          {/*      Proof of work*/}
-          {/*    </h3>*/}
-          {/*    <p className={'text-xs mt-2'}>*/}
-          {/*      Lorem ipsum dolor sit amet, consectetur adipisicing elit. Cupiditate doloremque et ex exercitationem*/}
-          {/*      laborum nam nobis qui recusandae rerum vero. Asperiores beatae consectetur eveniet ex explicabo, labore*/}
-          {/*      odit rem sequi.*/}
-          {/*    </p>*/}
-          {/*  </div>*/}
-          {/*)*/}
-          {/*}*/}
         </div>
 
         <Footer>
-          {isCurrentUserOwner ? (
-            renderBrandFooter()
-          ) : (
-            <>
-              <div>
-                <p className={'text-xs'}>Renumeration:</p>
-                <h1 className={'text-base font-bold'}>{collaboration.reward}tBNB</h1>
-              </div>
-              {
-                statusLoading ? (
-                  <ArrowPathIcon className={'w-6 h-6 animate-spin'}/>
-                ) : (
-                  isCurrentUserParticipating ? (
-                    status.accepted && (
-                      status.powProvided ? (
-                        status.finished ? (
-                          <h1>The renumeration was sent to your wallet: {account}</h1>
-                        ) : (
-                          <h1>Waiting for company representative to review your work. <br/>You don’t need to do anything
-                            for now.</h1>
-                        )
-                      ) : (
-                        <div>
-                          <div className={'flex gap-2'}>
-                            <div>
-                              <p>Company representative approved your participation.</p>
-                              <p>Time left to upload your work: 1 month 25 days 14 hours</p>
-                            </div>
-                            <Button onClick={handleProofModalOpen}>Upload work</Button>
-                          </div>
-
-                          <UploadWorkModal collaborationAuthor={collaboration.brand.title}
-                                           isOpen={isProofModalOpen} onClose={handleProofModalClose}
-                                           onSubmit={handleUploadProofOfWork}/>
-                        </div>
-                      )
+          <div>
+            <p className={'text-xs'}>Renumeration:</p>
+            <h1 className={'text-base font-bold'}>{collaboration.reward}tBNB</h1>
+          </div>
+          {
+            statusLoading ? (
+              <ArrowPathIcon className={'w-6 h-6 animate-spin'}/>
+            ) : (
+              isCurrentUserParticipating ? (
+                status.accepted && (
+                  status.powProvided ? (
+                    status.finished ? (
+                      <h1>The renumeration was sent to your wallet: {account}</h1>
+                    ) : (
+                      <h1>Waiting for company representative to review your work. <br/>You don’t need to do anything
+                        for now.</h1>
                     )
                   ) : (
-                    status.accepted ? (
-                      <div>
-                        <h1>The collaboration has already began or finished.</h1>
+                    <div>
+                      <div className={'flex gap-2'}>
+                        <div>
+                          <p>Company representative approved your participation.</p>
+                          <p>Time left to upload your work: 1 month 25 days 14 hours</p>
+                        </div>
+                        <Button onClick={handleProofModalOpen}>Upload work</Button>
                       </div>
-                    ) : proposals.some(proposal => proposal.address === account) ? (
-                      <h1>Waiting for company representative to approve your participation. <br/>
-                        You don’t need to do anything for now..</h1>
-                    ) : (
-                      <div>
-                        <Button onClick={handleApplicationModalOpen}>Apply for this collaboration</Button>
-                        <ApplyForCollaborationModal collaborationAuthor={collaboration.brand.title}
-                                                    isOpen={isApplicationModalOpen}
-                                                    onClose={handleApplicationModalClose}
-                                                    onSubmit={handleApplicationModalSubmit}/>
-                      </div>
-                    )
 
+                      <UploadWorkModal collaborationAuthor={collaboration.brand.title}
+                                       isOpen={isProofModalOpen} onClose={handleProofModalClose}
+                                       onSubmit={handleUploadProofOfWork}/>
+                    </div>
                   )
                 )
-              }
+              ) : (
+                status.accepted ? (
+                  <div>
+                    <h1>The collaboration has already began or finished.</h1>
+                  </div>
+                ) : proposals.some(proposal => proposal.address === account) ? (
+                  <h1>Waiting for company representative to approve your participation. <br/>
+                    You don’t need to do anything for now..</h1>
+                ) : (
+                  <div>
+                    <Button onClick={handleApplicationModalOpen}>Apply for this collaboration</Button>
+                    <ApplyForCollaborationModal collaborationAuthor={collaboration.brand.title}
+                                                isOpen={isApplicationModalOpen}
+                                                onClose={handleApplicationModalClose}
+                                                onSubmit={handleApplicationModalSubmit}/>
+                  </div>
+                )
 
-            </>
-
-          )}
+              )
+            )
+          }
         </Footer>
       </div>
     </div>

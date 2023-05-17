@@ -23,6 +23,7 @@ const Collaborations: FC = () => {
       let collabs = await Promise.all(data.docs.map(e => populateCollaboration({id: e.id, ...e.data()})))
       return Promise.all(collabs.map((e) => fetchCollaborationStatus(e, web3)))
     },
+    refetchOnWindowFocus: false
   })
 
   useEffect(() => {
@@ -41,7 +42,7 @@ const Collaborations: FC = () => {
       </h1>
 
       <div className={'grid grid-cols-2 gap-4 py-5'}>
-        {data.sort((a, b) => a.finished - b.finished).map((collaboration, index) => <div key={index}
+        {data.sort((a, b) => Number(a.finished) - Number(b.finished)).map((collaboration, index) => <div key={index}
                                                                                          className={'col-span-1'}>
           <CollaborationCard collaboration={collaboration}/>
         </div>)}

@@ -5,7 +5,6 @@ import classNames from "classnames";
 import {Button} from "flowbite-react";
 
 const CollaborationCard: FC<CollaborationCardProps> = ({collaboration}) => {
-  console.log(collaboration)
   return (
     <div className={'relative'}>
       {collaboration.finished && <div className={'absolute top-0 right-0 z-10'}>
@@ -34,7 +33,6 @@ const CollaborationCard: FC<CollaborationCardProps> = ({collaboration}) => {
         <div className={'flex flex-col gap-1'}>
           <h3 className={'text-lg font-bold'}>{collaboration.content.title}</h3>
           <p className={'text-lg'}>{collaboration.content.description}</p>
-          <span className={'text-lg text-pink-500'}>#{collaboration.tags.join(" #")}</span>
         </div>
         <div className={'flex justify-between items-center'}>
           <Link to={'/collaboration/' + collaboration.id}>
