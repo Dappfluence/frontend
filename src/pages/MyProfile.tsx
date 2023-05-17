@@ -1,6 +1,6 @@
 import React, {FC, useEffect, useState} from "react";
 import {useAccountInfo} from "@particle-network/connect-react-ui";
-import {useMutation, useQuery} from "@tanstack/react-query";
+import {useMutation, useQuery, useQueryClient} from "@tanstack/react-query";
 import {TAccountType} from "../shared/types/account";
 import {getType, setBrandWebsite, setDisplayName, setType} from "../api/account";
 import InfluencerProfile from "./InfluencerProfile";
@@ -22,6 +22,8 @@ export const MyProfile: FC = () => {
 
   const navigate = useNavigate();
 
+  const queryClient = useQueryClient();
+
   useEffect(() => {
     if (!accountLoading) {
       if (account === undefined) {
@@ -39,7 +41,10 @@ export const MyProfile: FC = () => {
 
   const {mutate: nameMutate} = useMutation<unknown, unknown, string>({
     mutationKey: ['displayName'],
-    mutationFn: async (displayName: string) => setDisplayName(account!, displayName)
+    mutationFn: async (displayName: string) => setDisplayName(account!, displayName),
+    onSettled: () => {
+      queryClient.invalidateQueries(['displayName']);
+    }
   })
   const {mutate: websiteMutate} = useMutation<unknown, unknown, string>({
     mutationKey: ['brandWebsite'],
@@ -48,9 +53,9 @@ export const MyProfile: FC = () => {
 
   const handleTypeChoice = (type: TAccountType) => {
     setIntermediateType(type);
-    if(type === 'influencer') {
+    if (type === 'influencer') {
       setStep(2);
-    } else if(type === 'brand') {
+    } else if (type === 'brand') {
       setStep(3);
     }
   }
@@ -58,11 +63,11 @@ export const MyProfile: FC = () => {
 
   const handleSubmit = async (name: string, website?: string) => {
     console.log(website)
-    if(intermediateType) {
+    if (intermediateType) {
       await mutate(intermediateType);
     }
     await nameMutate(name);
-    if(website) {
+    if (website) {
       await websiteMutate(website);
     }
 
@@ -75,6 +80,6 @@ export const MyProfile: FC = () => {
   if (type === 'influencer') return <InfluencerProfile/>
 
   return (
-    <RegisterModal type={type} step={step} handleTypeChoice={handleTypeChoice} handleSubmit={handleSubmit} />
+    <RegisterModal type={type} step={step} handleTypeChoice={handleTypeChoice} handleSubmit={handleSubmit}/>
   )
 }

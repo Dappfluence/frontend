@@ -39,8 +39,6 @@ const Header: React.FC = () => {
     refetch();
   }, [account])
 
-
-
   return <div className={'mb-[96px]'}>
     <div
       className={'fixed z-50 top-0  text-white w-full h-[96px] items-center flex flex-row justify-between py-6 px-20 bg-black rounded-[50px] rounded-t-none'}>
