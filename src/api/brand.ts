@@ -16,6 +16,7 @@ export const fetchBrand = async (address: string | undefined): Promise<IBrand | 
 
 
 export const fetchCollaborationStatus = async (collaboration: ICollaboration, web3: Web3): Promise<ICollaboration> => {
+  //@ts-ignore
   const contract = new web3.eth.Contract(CollaborationABI, collaboration.id);
   const accepted = await contract.methods.proposalAccepted().call();
   const inProgress = await contract.methods.workInProgress().call();
