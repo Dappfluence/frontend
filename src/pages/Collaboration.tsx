@@ -1,12 +1,11 @@
 import React, {FC, useEffect, useState} from 'react';
 import {useParams} from "react-router-dom";
 import {useQuery, useQueryClient} from "@tanstack/react-query";
-import {getFirestore, doc, getDoc, updateDoc} from "firebase/firestore";
+import {getFirestore, doc, getDoc} from "firebase/firestore";
 import {ICollaboration, populateCollaboration} from "../ui/collaborations/components/CollaborationCard.types";
 import {useConnectModal, useParticleProvider} from "@particle-network/connect-react-ui";
 import RepresentativeBlock from "../ui/brand/collaboration/RepresentativeBlock";
 import {useAccount} from "@particle-network/connect-react-ui";
-import ProposalsBlock from "../ui/brand/collaboration/ProposalsBlock";
 import CollaborationABI from "../assets/abi/Collaboration.json"
 import Web3 from "web3";
 import Footer from "../widgets/Footer";
@@ -14,7 +13,7 @@ import {Button} from "flowbite-react";
 import ApplyForCollaborationModal from "../widgets/ApplyForCollaborationModal";
 import {toast} from "react-toastify";
 import {fetchInfluencer} from "../api/influencer";
-import {ArrowPathIcon, CheckCircleIcon, ClockIcon} from "@heroicons/react/24/outline";
+import {ArrowPathIcon} from "@heroicons/react/24/outline";
 import UploadWorkModal from "../widgets/UploadWorkModal";
 import OwnerView from "../ui/brand/collaboration/OwnerView";
 

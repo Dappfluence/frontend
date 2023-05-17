@@ -74,8 +74,6 @@ const OwnerView: FC = () => {
     })
     setStatusLoading(false)
   }
-  const {openConnectModal} = useConnectModal()
-  const address = useAccount()
 
   useEffect(() => {
     if (provider) {

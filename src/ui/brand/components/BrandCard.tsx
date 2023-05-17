@@ -1,4 +1,4 @@
-import React, {FC, useRef, useState} from 'react';
+import React, {FC, useState} from 'react';
 import {PencilIcon, CheckIcon, XMarkIcon} from "@heroicons/react/24/outline";
 import Card from "./Card";
 import {IBrand} from "../../../shared/types/account";
@@ -13,7 +13,7 @@ interface IProps extends IBrand {
 
 type FormData = Pick<IBrand, 'title' | 'link'>
 
-const BrandCard: FC<IProps> = ({address, children, image, title, link, className = '', }) => {
+const BrandCard: FC<IProps> = ({address, image, title, link, className = '', }) => {
   const [isEditing, setIsEditing] = useState(false);
   const {mutate: nameMutate} = useMutation<unknown, unknown, string>({
     mutationKey: ['displayName'],
@@ -24,7 +24,7 @@ const BrandCard: FC<IProps> = ({address, children, image, title, link, className
     mutationFn: async (website: string) => setBrandWebsite(address!, website)
   })
 
-  const {register, handleSubmit, formState: {errors}, reset, setValue} = useForm<FormData>({
+  const {register, handleSubmit, formState: {errors}, setValue} = useForm<FormData>({
     defaultValues: {
       title,
       link
