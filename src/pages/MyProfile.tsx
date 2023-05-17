@@ -88,7 +88,7 @@ export const MyProfile: FC = () => {
       {type === 'brand' && <Brand/>}
       {type === 'influencer' && <InfluencerProfile/>}
 
-      <RegisterModal open={openModal} type={type} step={step} handleTypeChoice={handleTypeChoice}
+      <RegisterModal open={openModal} step={step} handleTypeChoice={handleTypeChoice}
                      handleSubmit={handleSubmit}/>
     </>
 
