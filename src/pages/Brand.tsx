@@ -10,7 +10,7 @@ import {IBrand} from "../shared/types/account";
 import CreateCollaborationModal from "../widgets/CreateCollaborationModal";
 import FactoryABI from "../assets/abi/Factory.json"
 import CollaborationABI from "../assets/abi/Collaboration.json"
-import {useAccount, useAccountInfo, useParticleConnect, useParticleProvider} from "@particle-network/connect-react-ui";
+import {useAccount, useParticleProvider} from "@particle-network/connect-react-ui";
 import Web3 from "web3";
 import {toast} from "react-toastify";
 import {ICollaboration} from "../ui/collaborations/components/CollaborationCard.types";

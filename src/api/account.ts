@@ -12,10 +12,24 @@ export const getType = async (address: string | undefined): Promise<TAccountType
   return "unknown";
 }
 
+export const getDisplayName = async (address: string | undefined): Promise<string> => {
+  if (!address) return "";
+  let data = await getDoc(doc(getFirestore(), "accounts", address));
+  if (data.exists()) {
+    return data.get("displayName");
+  }
+  return "";
+}
+
 
 export const setType = async (address: string, type: TAccountType) => {
   let document = doc(getFirestore(), "accounts", address);
-  await setDoc(document, {type: type});
+  await setDoc(document, {type });
+}
+
+export const setDisplayName = async (address: string, displayName: string) => {
+  let document = doc(getFirestore(), "accounts", address);
+  await updateDoc(document, { displayName });
 }
 
 

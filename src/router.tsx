@@ -5,6 +5,7 @@ import Brand from "./pages/Brand";
 import Collaboration from "./pages/Collaboration";
 import Header from "./widgets/Header";
 import {MyProfile} from "./pages/MyProfile";
+import InfluencerProfile from "./pages/InfluencerProfile";
 
 
 const router = createBrowserRouter([
@@ -30,6 +31,10 @@ const router = createBrowserRouter([
       {
         path: '/me',
         element: <MyProfile/>,
+      },
+      {
+        path: '/influencer/:address',
+        element: <InfluencerProfile />
       }
     ]
   }

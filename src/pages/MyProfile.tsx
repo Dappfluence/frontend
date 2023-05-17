@@ -2,7 +2,7 @@ import React, {FC, useEffect} from "react";
 import {useAccountInfo} from "@particle-network/connect-react-ui";
 import {useMutation, useQuery} from "@tanstack/react-query";
 import {TAccountType} from "../shared/types/account";
-import {getType, setType} from "../api/account";
+import {getType, setDisplayName, setType} from "../api/account";
 import InfluencerProfile from "./InfluencerProfile";
 import Brand from "./Brand";
 import classNames from "classnames";
@@ -37,8 +37,14 @@ export const MyProfile: FC = () => {
     mutationFn: async (type: TAccountType) => setType(account!, type)
   })
 
+  const {mutate: nameMutate} = useMutation<unknown, unknown, string>({
+    mutationKey: ['displayName'],
+    mutationFn: async (displayName: string) => setDisplayName(account!, displayName)
+  })
+
   const handleChoice = async (mutationOption: TAccountType) => {
     await mutate(mutationOption);
+    await nameMutate("123");
     await refetch();
   }
 

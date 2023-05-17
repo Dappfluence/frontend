@@ -1,9 +1,9 @@
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import logo from "../assets/logo.png";
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import {
   ConnectButton,
-  useAccount,
+  useAccount, useParticleConnect,
 } from "@particle-network/connect-react-ui";
 
 import '@particle-network/connect-react-ui/dist/index.css';
@@ -11,11 +11,23 @@ import '@particle-network/connect-react-ui/dist/index.css';
 import {ParticleNetwork} from "@particle-network/auth";
 import {shortHandAddress} from "../shared/utils";
 import {Dropdown} from "flowbite-react";
+import {getDisplayName, getType} from "../api/account";
+import {useQuery} from "@tanstack/react-query";
+import {TAccountType} from "../shared/types/account";
 
 
 const Header: React.FC = () => {
-
   const account = useAccount();
+  const navigate = useNavigate()
+  const particleConnect = useParticleConnect();
+  particleConnect.connectKit.on(('disconnect'), () => {
+    navigate('/');
+  })
+
+  const {data: displayName = '', refetch} = useQuery<unknown, unknown, string>({
+    queryKey: ['displayName'],
+    queryFn: async () => getDisplayName(account!)
+  })
 
   useEffect(() => {
     if (!account) return
@@ -24,12 +36,15 @@ const Header: React.FC = () => {
       clientKey: 'clR7rCoWx6Yv9MzfSCJUGy7ANxiJDRWgVZLSdT5W' as string,
       appId: '6650a17f-78cb-4d7d-9a29-d8c45770acf1' as string,
     });
+
+    refetch();
   }, [account])
+
 
 
   return <div className={'mb-[96px]'}>
     <div
-      className={'fixed z-20 top-0  text-white w-full h-[96px] items-center flex flex-row justify-between py-6 px-20 bg-black rounded-[50px] rounded-t-none'}>
+      className={'fixed z-50 top-0  text-white w-full h-[96px] items-center flex flex-row justify-between py-6 px-20 bg-black rounded-[50px] rounded-t-none'}>
       <Link to={'/'}>
         <div className={'flex flex-row gap-3 justify-start items-center'}>
           <img src={logo} alt=""/>
@@ -43,7 +58,7 @@ const Header: React.FC = () => {
               {({openAccountModal}) => {
                 return (
                   <div className={'flex gap-2 items-center'}>
-                    <Dropdown label={shortHandAddress(account ?? '', 5)}>
+                    <Dropdown label={displayName ? displayName : shortHandAddress(account ?? '', 5)}>
                       <Link to={'/me'}>
                         <Dropdown.Item>
                           Dashboard

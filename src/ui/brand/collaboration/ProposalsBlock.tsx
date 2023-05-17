@@ -17,7 +17,7 @@ const ProposalsBlock: FC<Props> = ({proposals, onApprove, onDeny, approvable = f
       <div className={'mt-4'}>
         {proposals.map((proposal, index) => (
           <div key={index}>
-            <Proposal name={proposal.name} email={proposal.email} address={proposal.address}
+            <Proposal name={proposal.displayName} email={proposal.email} address={proposal.address}
                       photoURL={proposal.photoURL} approved={proposals.findIndex(e => e.approved) >= 0}
                       approvable={approvable} onDeny={onDeny}
                       onApprove={onApprove}/>

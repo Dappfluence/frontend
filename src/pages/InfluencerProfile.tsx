@@ -5,7 +5,7 @@ import TwitterFilled from "../assets/icons/TwitterFilled";
 import InfoStack from "../shared/ui/InfoStack";
 import dayjs from "dayjs";
 import relativeTime from 'dayjs/plugin/relativeTime';
-import {Link} from "react-router-dom";
+import {Link, useParams} from "react-router-dom";
 import {IInfluencer} from "../shared/types/account";
 import {useQuery} from "@tanstack/react-query";
 import {useAccount, useParticleProvider} from "@particle-network/connect-react-ui";
@@ -44,7 +44,9 @@ const data = {
 dayjs.extend(relativeTime);
 
 const InfluencerProfile: FC = () => {
-  const account = useAccount();
+  const {address} = useParams();
+  console.log(address)
+  const account = address ?? useAccount();
   const {data: user} = useQuery<{}, unknown, IInfluencer>({
     queryKey: ['influencer', account],
     queryFn: async (): Promise<IInfluencer> => fetchInfluencer(account!)
