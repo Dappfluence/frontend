@@ -7,7 +7,7 @@ interface Props {
 
 const Card: FC<Props> = ({children, className}) => {
   return (
-    <div className={`py-8 px-10 border-2 border-gray-200 rounded-[32px] ${className}`}>
+    <div className={`py-8 px-10 border-2 border-gray-200 rounded-[32px] bg-white ${className}`}>
       {children}
     </div>
   );

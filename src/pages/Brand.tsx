@@ -16,7 +16,7 @@ import {ICollaboration} from "../ui/collaborations/components/CollaborationCard.
 import {collection, doc, getFirestore, query, where, onSnapshot, setDoc} from "firebase/firestore";
 import {Collaboration} from "../shared/ui/Collaboration";
 import {ArrowPathIcon} from "@heroicons/react/24/outline";
-
+import binaryBg from "../assets/Binary_001.png"
 const Brand: FC = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const provider = useParticleProvider();
@@ -116,7 +116,7 @@ const Brand: FC = () => {
     return null;
   }
 
-  return <div className={'p-12 py-[126px] -mt-[96px]  bg-gray-100 min-h-screen'}>
+  return <div className={'p-12 py-[126px] -mt-[96px]  bg-gray-100 min-h-screen  bg-contain'} style={{backgroundImage: `url(${binaryBg})`}}>
     <h2 className={'text-5xl font-bold'}>{brand.title}</h2>
     <div className={'grid grid-cols-3 mt-12 gap-8'}>
       <BrandCard title={brand.title} link={brand.link} image={brand.image}/>

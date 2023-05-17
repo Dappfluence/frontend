@@ -13,6 +13,7 @@ import {fetchInfluencer} from "../api/influencer";
 import {ICollaboration} from "../ui/collaborations/components/CollaborationCard.types";
 import {fetchCollaborations} from "../api/account";
 import {Button} from "flowbite-react";
+import binaryBg from "../assets/Binary_001.png";
 
 const pastCollaboration = {
   id: 123,
@@ -62,7 +63,7 @@ const InfluencerProfile: FC = () => {
   }, [provider])
 
   return (
-    <div className={'container mx-auto mt-[144px] '}>
+    <div className={'container mx-auto mt-[144px] '}  style={{backgroundImage: `url(${binaryBg})`}}>
       <h1 className={'text-5xl font-black'}>My profile</h1>
       <div className={'flex justify-between mt-8'}>
         <div className={'flex flex-col gap-5 w-[63%]'}>

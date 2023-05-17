@@ -8,6 +8,7 @@ import {fetchCollaborationStatus} from "../api/brand";
 import Web3 from "web3";
 import {useParticleProvider} from "@particle-network/connect-react-ui";
 import {ArrowPathIcon} from "@heroicons/react/24/outline";
+import binaryBg from "../assets/Binary_001.png";
 
 const Collaborations: FC = () => {
 
@@ -34,7 +35,7 @@ const Collaborations: FC = () => {
   </div>
 
   return (
-    <div className={'mt-[144px] container mx-auto'}>
+    <div className={'mt-[144px] container mx-auto'} style={{backgroundImage: `url(${binaryBg})`}}>
       <h1 className={'text-5xl font-bold'}>
         {data.length} Collaborations
       </h1>
