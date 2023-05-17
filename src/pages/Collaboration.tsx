@@ -179,36 +179,6 @@ const Collaboration: FC = () => {
 
 
   const queryClient = useQueryClient();
-  const handleApprove = async (a: string) => {
-    let web3 = new Web3(provider as any);
-    // @ts-ignore
-    const contract = new web3.eth.Contract(CollaborationABI, id);
-    let index = 0;
-    for (let i = 0; i < proposals.length; i++) {
-      if (proposals[i].address === a) {
-        index = i;
-        break;
-      }
-    }
-
-    await toast.promise(async () => {
-      try {
-        await contract.methods.acceptProposal(index).send({
-          from: account,
-        });
-        await queryClient.invalidateQueries(['collaboration', id])
-        await updateDoc(doc(getFirestore(), 'collaborations', id), {approved: a});
-
-        fetchStatus();
-      } catch (e) {
-        throw new Error((e as { message: string }).message);
-      }
-    }, {
-      error: 'Error',
-      pending: 'Accepting proposal...',
-      success: 'Proposal accepted!',
-    })
-  }
 
   const handleApproveWork = async () => {
     let web3 = new Web3(provider as any);
@@ -230,58 +200,6 @@ const Collaboration: FC = () => {
       pending: 'Approving work...',
       success: 'Work approved!',
     })
-  }
-
-  const renderBrandFooter = () => {
-    if (statusLoading) {
-      return <ArrowPathIcon className={'w-6 h-6 animate-spin'}/>
-    }
-
-    if (status.finished) {
-      return <>
-        <div>
-          <p className={'text-xs'}>Proposals:</p>
-          <h1 className={'text-lg font-bold'}>{proposals.length} Candidates</h1>
-        </div>
-        <div className={'text-xl text-green-600 flex gap-4 items-center'}>
-          <h1>The collaboration is finished</h1>
-          <CheckCircleIcon className={'w-12 h-12'}/>
-        </div>
-      </>
-    }
-    if (status.accepted) {
-      if (!status.powProvided) {
-        return <>
-          <div>
-            <p className={'text-xs'}>Proposals:</p>
-            <h1 className={'text-lg font-bold'}>{proposals.length} Candidates</h1>
-          </div>
-          <div className={'flex flex-row items-center gap-2'}>
-            <span>Waiting for work</span>
-            <ClockIcon className={'w-12 h-12 text-sky-700 animate-spin'}/>
-          </div>
-
-        </>
-      } else {
-        return <>
-          <div>
-            <p className={'text-xs'}>Proposals:</p>
-            <h1 className={'text-lg font-bold'}>{proposals.length} Candidates</h1>
-          </div>
-          <div className={'flex flex-row items-end gap-2'}>
-            <Button outline={true} color={'red'} onClick={() => alert('gfys')}>Request Changes</Button>
-            <Button onClick={handleApproveWork}>Approve Work</Button>
-          </div>
-        </>
-      }
-    }
-    return <>
-      <div>
-        <p className={'text-xs'}>Proposals:</p>
-        <h1 className={'text-lg font-bold'}>{proposals.length} Candidates</h1>
-      </div>
-      <div/>
-    </>
   }
 
   if (!collaboration) return null;

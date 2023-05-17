@@ -30,8 +30,6 @@ const representatives = [{
 }]
 
 const OwnerView: FC = () => {
-  const [isCurrentUserOwner, setIsCurrentUserOwner] = useState(false);
-  const [isCurrentUserParticipating, setIsCurrentUserParticipating] = useState(false);
   const {id = ''} = useParams();
   const account = useAccount();
 
@@ -76,74 +74,8 @@ const OwnerView: FC = () => {
     })
     setStatusLoading(false)
   }
-  const [isApplicationModalOpen, setIsApplicationModalOpen] = useState(false);
-  const [isProofModalOpen, setIsProofModalOpen] = useState(false);
-
   const {openConnectModal} = useConnectModal()
   const address = useAccount()
-  const handleApplicationModalOpen = () => {
-    if (address) return setIsApplicationModalOpen(true);
-    openConnectModal!()
-  }
-
-  const handleApplicationModalClose = () => {
-    setIsApplicationModalOpen(false);
-  }
-
-  const handleProofModalOpen = () => {
-    setIsProofModalOpen(true);
-  }
-
-  const handleProofModalClose = () => {
-    setIsProofModalOpen(false);
-  }
-
-  const handleApplicationModalSubmit = async (data: any) => {
-    if (account === undefined) return;
-    let web3 = new Web3(provider as any);
-    // @ts-ignore
-    const contract = new web3.eth.Contract(CollaborationABI, id);
-    setIsApplicationModalOpen(false)
-    await toast.promise(async () => {
-      try {
-        await contract.methods.createProposal(data.skills).send({
-          from: account,
-        });
-        await fetchStatus();
-      } catch (e) {
-        console.log(e)
-      }
-    }, {
-      error: 'Error',
-      pending: 'Creating proposal...',
-      success: 'Proposal created!',
-    })
-
-  }
-
-  const handleUploadProofOfWork = async (data: any) => {
-    if (account === undefined) return;
-    let web3 = new Web3(provider as any);
-    // @ts-ignore
-    const contract = new web3.eth.Contract(CollaborationABI, id);
-    setIsProofModalOpen(false);
-    await toast.promise(async () => {
-      try {
-        await contract.methods.submitProofOfWork(data.proof).send({
-          from: account,
-        });
-        fetchStatus();
-
-      } catch (e) {
-        console.log(e)
-      }
-    }, {
-      error: 'Error',
-      pending: 'Sending proof...',
-      success: 'Proof sent!',
-    })
-
-  }
 
   useEffect(() => {
     if (provider) {
@@ -162,20 +94,6 @@ const OwnerView: FC = () => {
 
     setProposals(result)
   }
-  useEffect(() => {
-    if (collaboration?.creator === account) {
-      setIsCurrentUserOwner(true)
-    } else {
-      setIsCurrentUserOwner(false)
-    }
-
-    if (collaboration?.approved === account) {
-      setIsCurrentUserParticipating(true)
-    } else {
-      setIsCurrentUserParticipating(false);
-    }
-  }, [collaboration])
-
 
   const queryClient = useQueryClient();
   const handleApprove = async (a: string) => {
