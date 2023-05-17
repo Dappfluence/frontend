@@ -12,15 +12,15 @@ import {RegisterModal} from "../ui/profile/component";
 export const MyProfile: FC = () => {
   const [step, setStep] = useState(1);
   const [intermediateType, setIntermediateType] = useState<TAccountType | null>(null);
-
+  const [openModal, setOpenModal] = useState(false);
   const {accountLoading, account} = useAccountInfo()
 
-  const {data: type, refetch, isLoading} = useQuery<unknown, unknown, TAccountType>({
-    queryKey: ['accountType'],
-    queryFn: async () => getType(account!)
+  const {data: type = null, refetch, isLoading} = useQuery<unknown, unknown, TAccountType>({
+    queryKey: ['accountTypeGetter'],
+    queryFn: async () => getType(account!),
   })
 
-  const navigate = useNavigate();
+  const navigate = useNavigate()
 
   const queryClient = useQueryClient();
 
@@ -34,6 +34,15 @@ export const MyProfile: FC = () => {
     }
   }, [accountLoading]);
 
+  useEffect(() => {
+    console.log(type)
+    if (type === 'brand' || type === 'influencer' || type == null) {
+      setOpenModal(false)
+    } else {
+      setOpenModal(true)
+    }
+  }, [type])
+
   const {mutate} = useMutation<unknown, unknown, TAccountType>({
     mutationKey: ['accountType'],
     mutationFn: async (type: TAccountType) => setType(account!, type)
@@ -42,9 +51,7 @@ export const MyProfile: FC = () => {
   const {mutate: nameMutate} = useMutation<unknown, unknown, string>({
     mutationKey: ['displayName'],
     mutationFn: async (displayName: string) => setDisplayName(account!, displayName),
-    onSettled: () => {
-      queryClient.invalidateQueries(['displayName']);
-    }
+    onSettled: () => queryClient.invalidateQueries(['displayName'])
   })
   const {mutate: websiteMutate} = useMutation<unknown, unknown, string>({
     mutationKey: ['brandWebsite'],
@@ -62,7 +69,6 @@ export const MyProfile: FC = () => {
 
 
   const handleSubmit = async (name: string, website?: string) => {
-    console.log(website)
     if (intermediateType) {
       await mutate(intermediateType);
     }
@@ -76,10 +82,15 @@ export const MyProfile: FC = () => {
 
   if (accountLoading || isLoading) return <div>Loading...</div>
 
-  if (type === 'brand') return <Brand/>
-  if (type === 'influencer') return <InfluencerProfile/>
-
   return (
-    <RegisterModal type={type} step={step} handleTypeChoice={handleTypeChoice} handleSubmit={handleSubmit}/>
+    <>
+
+      {type === 'brand' && <Brand/>}
+      {type === 'influencer' && <InfluencerProfile/>}
+
+      <RegisterModal open={openModal} type={type} step={step} handleTypeChoice={handleTypeChoice}
+                     handleSubmit={handleSubmit}/>
+    </>
+
   )
 }

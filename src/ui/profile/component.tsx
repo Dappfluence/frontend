@@ -3,7 +3,7 @@ import {TAccountType} from "../../shared/types/account";
 import {useForm} from "react-hook-form";
 import {Modal} from "flowbite-react";
 
-export const TypeStep: FC<{handleTypeChoice: (type: TAccountType) => void}> = ({handleTypeChoice}) => {
+export const TypeStep: FC<{ handleTypeChoice: (type: TAccountType) => void }> = ({handleTypeChoice}) => {
   return (
     <>
       <h3 className="mb-8 text-3xl font-thin text-center">
@@ -27,8 +27,8 @@ export const TypeStep: FC<{handleTypeChoice: (type: TAccountType) => void}> = ({
   )
 }
 
-export const InfluencerStep: FC<{onSubmit: (name: string) => Promise<void>}> = ({onSubmit}) => {
-  const {register, handleSubmit, formState: {errors}, reset} = useForm<{name: string}>();
+export const InfluencerStep: FC<{ onSubmit: (name: string) => Promise<void> }> = ({onSubmit}) => {
+  const {register, handleSubmit, formState: {errors}, reset} = useForm<{ name: string }>();
 
   const onFormSubmit = handleSubmit((data) => {
     onSubmit(data.name);
@@ -66,8 +66,8 @@ export const InfluencerStep: FC<{onSubmit: (name: string) => Promise<void>}> = (
   )
 }
 
-export const BrandStep: FC<{onSubmit: (name: string, website: string) => Promise<void>}> = ({onSubmit}) => {
-  const {register, handleSubmit, formState: {errors}, reset} = useForm<{name: string, website: string}>();
+export const BrandStep: FC<{ onSubmit: (name: string, website: string) => Promise<void> }> = ({onSubmit}) => {
+  const {register, handleSubmit, formState: {errors}, reset} = useForm<{ name: string, website: string }>();
 
   const onFormSubmit = handleSubmit((data) => {
     onSubmit(data.name, data.website);
@@ -123,37 +123,27 @@ export const BrandStep: FC<{onSubmit: (name: string, website: string) => Promise
 
 
 interface ModalProps {
-  type?: TAccountType;
   step: number;
   handleTypeChoice: (type: TAccountType) => void;
   handleSubmit: (name: string, website?: string) => Promise<void>
+  open: boolean
 }
-export const RegisterModal: FC<ModalProps> = ({type, step, handleTypeChoice, handleSubmit}) => {
-  const [show, setShow] = useState(false);
 
-  useEffect(() => {
-    setShow(type === 'unknown');
-  }, [step])
-
-  useEffect(() => {
-    return () => {
-      setShow(false);
-    }
-  }, [])
+export const RegisterModal: FC<ModalProps> = ({step, open=false, handleTypeChoice, handleSubmit}) => {
 
 
   return (
     <Modal
-      show={show}
+      show={open}
       size="md"
-      popup={true}
+      popup={false}
     >
       <Modal.Body className={'bg-white'}>
         <div className="p-8 pt-12">
 
           {step === 1 && <TypeStep handleTypeChoice={handleTypeChoice}/>}
-          {step === 2 && <InfluencerStep onSubmit={handleSubmit} />}
-          {step === 3 && <BrandStep onSubmit={handleSubmit} />}
+          {step === 2 && <InfluencerStep onSubmit={handleSubmit}/>}
+          {step === 3 && <BrandStep onSubmit={handleSubmit}/>}
 
         </div>
       </Modal.Body>
