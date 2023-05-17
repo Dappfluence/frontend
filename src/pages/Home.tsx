@@ -4,7 +4,7 @@ import grid from "../assets/grid.png";
 import {Button} from "flowbite-react";
 import homeSectionBg from "../assets/home-section-bg.png"
 import {useAccount} from "@particle-network/connect-react-ui";
-import {Link, useNavigate} from "react-router-dom";
+import {Link} from "react-router-dom";
 import BenefitTabs from "../ui/home/component";
 
 const Home: React.FC = () => {

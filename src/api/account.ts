@@ -1,5 +1,5 @@
 import {doc, getDoc, updateDoc, setDoc, getFirestore, getDocs, query, collection, where} from "firebase/firestore";
-import {IBrand, TAccountType} from "../shared/types/account";
+import {TAccountType} from "../shared/types/account";
 import {ICollaboration, populateCollaboration} from "../ui/collaborations/components/CollaborationCard.types";
 
 

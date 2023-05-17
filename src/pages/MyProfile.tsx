@@ -5,9 +5,6 @@ import {TAccountType} from "../shared/types/account";
 import {getType, setDisplayName, setType} from "../api/account";
 import InfluencerProfile from "./InfluencerProfile";
 import Brand from "./Brand";
-import classNames from "classnames";
-import Card from "../ui/brand/components/Card";
-import {BuildingStorefrontIcon, UserPlusIcon} from "@heroicons/react/24/outline";
 import {Modal} from "flowbite-react";
 import {useNavigate} from "react-router-dom";
 

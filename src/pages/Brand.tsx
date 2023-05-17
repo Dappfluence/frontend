@@ -3,7 +3,6 @@ import Card from "../ui/brand/components/Card";
 import BrandCard from "../ui/brand/components/BrandCard";
 import Footer from "../widgets/Footer";
 import {Button} from "flowbite-react";
-import {Link, useParams} from "react-router-dom";
 import {useQuery} from "@tanstack/react-query";
 import {fetchBrand} from "../api/brand";
 import {IBrand} from "../shared/types/account";

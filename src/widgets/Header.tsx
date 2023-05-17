@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect} from "react";
 import logo from "../assets/logo.png";
 import {Link, useNavigate} from "react-router-dom";
 import {
@@ -11,9 +11,8 @@ import '@particle-network/connect-react-ui/dist/index.css';
 import {ParticleNetwork} from "@particle-network/auth";
 import {shortHandAddress} from "../shared/utils";
 import {Dropdown} from "flowbite-react";
-import {getDisplayName, getType} from "../api/account";
+import {getDisplayName} from "../api/account";
 import {useQuery} from "@tanstack/react-query";
-import {TAccountType} from "../shared/types/account";
 
 
 const Header: React.FC = () => {
