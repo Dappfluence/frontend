@@ -88,6 +88,16 @@ Influencer's Dashboard
 **Live website**
 https://dappfluence.web.app/
 
+## Local setup
+
+We use Vite & Tailwind combo for the project, so the installation will be easy and the project will be lightweight
+
+To set up the project locally, run 2 simpel commands, using `lts/hydrogen` Node.js verion
+```
+$ yarn
+$ yarn dev
+```
+Voila! the project is now running on your localhost.
 
 ## Roadmap
 
