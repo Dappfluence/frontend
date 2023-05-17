@@ -2,21 +2,20 @@ import React, {FC, useEffect, useState} from 'react';
 import {useParams} from "react-router-dom";
 import {useQuery, useQueryClient} from "@tanstack/react-query";
 import {getFirestore, doc, getDoc, updateDoc} from "firebase/firestore";
-import {ICollaboration, populateCollaboration} from "../ui/collaborations/components/CollaborationCard.types";
+
 import {useConnectModal, useParticleProvider} from "@particle-network/connect-react-ui";
-import RepresentativeBlock from "../ui/brand/collaboration/RepresentativeBlock";
 import {useAccount} from "@particle-network/connect-react-ui";
-import ProposalsBlock from "../ui/brand/collaboration/ProposalsBlock";
-import CollaborationABI from "../assets/abi/Collaboration.json"
 import Web3 from "web3";
-import Footer from "../widgets/Footer";
 import {Button} from "flowbite-react";
-import ApplyForCollaborationModal from "../widgets/ApplyForCollaborationModal";
 import {toast} from "react-toastify";
-import {fetchInfluencer} from "../api/influencer";
 import {ArrowPathIcon, CheckCircleIcon, ClockIcon} from "@heroicons/react/24/outline";
-import UploadWorkModal from "../widgets/UploadWorkModal";
-import OwnerView from "../ui/brand/collaboration/OwnerView";
+import {fetchInfluencer} from "../../../api/influencer";
+import CollaborationABI from "../../../assets/abi/Collaboration.json"
+import RepresentativeBlock from "./RepresentativeBlock";
+import ProposalsBlock from "./ProposalsBlock";
+import Footer from "../../../widgets/Footer";
+import {ICollaboration, populateCollaboration} from "../../collaborations/components/CollaborationCard.types";
+import Card from "../components/Card";
 
 
 const representatives = [{
@@ -30,7 +29,7 @@ const representatives = [{
   email: 'beaumontworth.b@gucci.com'
 }]
 
-const Collaboration: FC = () => {
+const OwnerView: FC = () => {
   const [isCurrentUserOwner, setIsCurrentUserOwner] = useState(false);
   const [isCurrentUserParticipating, setIsCurrentUserParticipating] = useState(false);
   const {id = ''} = useParams();
@@ -286,15 +285,63 @@ const Collaboration: FC = () => {
 
   if (!collaboration) return null;
 
-  if (isCurrentUserOwner) return <OwnerView/>
-
   return (
-    <div className={'mt-[144px] container mx-auto mb-[100px]'}>
-      <div className={'flex justify-between items-center gap-16'}>
-        <div className={'grow w-1/2'}>
-          <h1 className={'text-5xl font-black'}>
-            {collaboration?.brand.title}
+    <div className={'mt-[144px] container mx-auto mb-[100px] flex gap-5'}>
+      <div className={'w-1/2 flex flex-col gap-5'}>
+        <Card>
+          <h1 className={'text-3xl font-black'}>
+            {collaboration?.content.title}
           </h1>
+        </Card>
+
+        <Card>
+          <p className={'text-lg'}>
+            {collaboration.content.description}
+          </p>
+        </Card>
+
+        <Card>
+          <RepresentativeBlock representatives={representatives}/>
+        </Card>
+
+
+      </div>
+
+      <div className={'w-1/2 flex flex-col gap-5'}>
+        <Card>
+          <ProposalsBlock statusLoading={statusLoading}
+                          approvable={!status.finished && !status.inProgress && !status.accepted}
+                          onDeny={(a) => {
+                            alert('deny ' + a)
+                          }} onApprove={handleApprove} proposals={proposals}/>
+        </Card>
+
+        <Card flex={false}>
+          <h3 className={'text-lg font-bold'}>Main Requirements</h3>
+
+          <div className={'mt-4 flex gap-6'}>
+            <div>
+              <p className={'text-xs'}>Platform:</p>
+              <p className={'text-base font-semibold mt-1'}>YouTube</p>
+            </div>
+            <div>
+              <p className={'text-xs'}>Amount of Subscriptions:</p>
+              <p className={'text-base font-semibold mt-1'}>{'>'} 1 200 000</p>
+            </div>
+            <div>
+              <p className={'text-xs'}>Account Age:</p>
+              <p className={'text-base font-semibold mt-1'}>{'>'} 2 years</p>
+            </div>
+            <div>
+              <p className={'text-xs'}>Amount of videos:</p>
+              <p className={'text-base font-semibold mt-1'}>{'>'} 1 000</p>
+            </div>
+          </div>
+        </Card>
+
+        <Card flex={false}>
+          <h3 className={'text-lg font-bold'}>Additional information</h3>
+
           <div className={'mt-6 flex justify-between'}>
             <div>
               <p className={'text-xs'}>Collaboration type:</p>
@@ -315,111 +362,19 @@ const Collaboration: FC = () => {
               </div>
             </div>
           </div>
-        </div>
-        <div className={'grow w-1/2 flex items-center justify-center'}>
-          <img className={'w-full'} src={collaboration.brand.image} alt=""/>
-        </div>
+        </Card>
+
       </div>
 
-      <div className={'flex mt-16 gap-16 justify-between'}>
 
-        <div className={'w-[45%]'}>
-
-          <h3 className={'text-lg font-bold'}>
-            {collaboration.content.title}
-          </h3>
-
-          <p className={'text-lg mt-4'}>
-            {collaboration.content.description}
-          </p>
-
-        </div>
-
-
-        <div className={'w-[45%]'}>
-
-          <h3 className={'text-lg font-bold'}>Main Requirements</h3>
-
-          <div className={'mt-5 flex gap-6'}>
-            <div>
-              <p className={'text-xs'}>Platform:</p>
-              <p className={'text-base font-semibold mt-1'}>YouTube</p>
-            </div>
-            <div>
-              <p className={'text-xs'}>Amount of Subscriptions:</p>
-              <p className={'text-base font-semibold mt-1'}>{'>'} 1 200 000</p>
-            </div>
-            <div>
-              <p className={'text-xs'}>Account Age:</p>
-              <p className={'text-base font-semibold mt-1'}>{'>'} 2 years</p>
-            </div>
-          </div>
-
-          <div className={'mt-8'}>
-            <RepresentativeBlock representatives={representatives}/>
-          </div>
-
-        </div>
+      <div className={'flex mt-5 gap-16 justify-between'}>
 
         <Footer>
-          <div>
-            <p className={'text-xs'}>Renumeration:</p>
-            <h1 className={'text-base font-bold'}>{collaboration.reward}tBNB</h1>
-          </div>
-          {
-            statusLoading ? (
-              <ArrowPathIcon className={'w-6 h-6 animate-spin'}/>
-            ) : (
-              isCurrentUserParticipating ? (
-                status.accepted && (
-                  status.powProvided ? (
-                    status.finished ? (
-                      <h1>The renumeration was sent to your wallet: {account}</h1>
-                    ) : (
-                      <h1>Waiting for company representative to review your work. <br/>You don’t need to do anything
-                        for now.</h1>
-                    )
-                  ) : (
-                    <div>
-                      <div className={'flex gap-2'}>
-                        <div>
-                          <p>Company representative approved your participation.</p>
-                          <p>Time left to upload your work: 1 month 25 days 14 hours</p>
-                        </div>
-                        <Button onClick={handleProofModalOpen}>Upload work</Button>
-                      </div>
-
-                      <UploadWorkModal collaborationAuthor={collaboration.brand.title}
-                                       isOpen={isProofModalOpen} onClose={handleProofModalClose}
-                                       onSubmit={handleUploadProofOfWork}/>
-                    </div>
-                  )
-                )
-              ) : (
-                status.accepted ? (
-                  <div>
-                    <h1>The collaboration has already began or finished.</h1>
-                  </div>
-                ) : proposals.some(proposal => proposal.address === account) ? (
-                  <h1>Waiting for company representative to approve your participation. <br/>
-                    You don’t need to do anything for now..</h1>
-                ) : (
-                  <div>
-                    <Button onClick={handleApplicationModalOpen}>Apply for this collaboration</Button>
-                    <ApplyForCollaborationModal collaborationAuthor={collaboration.brand.title}
-                                                isOpen={isApplicationModalOpen}
-                                                onClose={handleApplicationModalClose}
-                                                onSubmit={handleApplicationModalSubmit}/>
-                  </div>
-                )
-
-              )
-            )
-          }
+          {renderBrandFooter()}
         </Footer>
       </div>
     </div>
   );
 };
 
-export default Collaboration;
+export default OwnerView;

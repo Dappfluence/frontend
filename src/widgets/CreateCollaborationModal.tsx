@@ -10,7 +10,9 @@ interface Props {
 
 interface FormData {
   title: string;
+  description: string;
   budget: number;
+  start: string;
   deadline: string;
 }
 
@@ -28,9 +30,9 @@ const CreateCollaborationModal: FC<Props> = ({isOpen, onClose, onSubmit}) => {
   return (
     <Modal show={isOpen} onClose={handleClose} size="3xl" popup={true}>
       <Modal.Header className="bg-white"/>
-      <Modal.Body className="bg-white">
+      <Modal.Body className="bg-white max-h-[80vh] overflow-y-scroll">
         <div className="p-8">
-          <h3 className="mb-8 text-3xl font-thin">Request new Collaboration</h3>
+          <h3 className="mb-8 text-3xl font-thin">Create new Collaboration</h3>
 
           <form onSubmit={onFormSubmit}>
             <div className="flex flex-col gap-4 mb-8">
@@ -43,6 +45,17 @@ const CreateCollaborationModal: FC<Props> = ({isOpen, onClose, onSubmit}) => {
                   className="border rounded-lg p-2"
                 />
                 {errors.title && <span className={'text-red-700'}>This field is required.</span>}
+              </label>
+
+              <label className="flex flex-col gap-2">
+                <span className="text-base">Collaboration description:</span>
+                <textarea
+                  rows={5}
+                  placeholder={'e.g: We are looking for an influencer to collaborate on a content creation challenge for Twitter... '}
+                  {...register('description', {required: true})}
+                  className="border rounded-lg p-2"
+                />
+                {errors.description && <span className={'text-red-700'}>This field is required.</span>}
               </label>
 
               <label className="flex flex-col gap-2">
@@ -63,16 +76,35 @@ const CreateCollaborationModal: FC<Props> = ({isOpen, onClose, onSubmit}) => {
                 )}
               </label>
 
-              <label className="flex flex-col gap-2">
-                <span className="text-base">Collaboration due:</span>
-                <input
-                  type="date"
-                  {...register('deadline', {required: true})}
-                  className="border rounded-lg p-2"
-                  min={new Date().toISOString().split('T')[0]}
-                />
-                {errors.deadline && <span className={'text-red-700'}>This field is required.</span>}
-              </label>
+
+            </div>
+            <div className="flex flex-col gap-2">
+              <span className="text-base">Collaboration dates:</span>
+              <div className={'flex items-start gap-4'}>
+                <label className={'flex flex-col gap-1'}>
+                  <input
+                    type="date"
+                    {...register('start', {required: true})}
+                    className="border rounded-lg p-2"
+                    min={new Date().toISOString().split('T')[0]}
+                  />
+                  <span className={'text-xs'}>Start date</span>
+                </label>
+
+                <label className={'flex flex-col gap-1'}>
+                  <input
+                    type="date"
+                    {...register('deadline', {required: true})}
+                    className="border rounded-lg p-2"
+                    min={new Date().toISOString().split('T')[0]}
+                  />
+                  <span className={'text-xs'}>Deadline</span>
+
+                </label>
+              </div>
+
+
+              {errors.deadline && <span className={'text-red-700'}>This field is required.</span>}
             </div>
 
             <div className="flex justify-end gap-4">

@@ -13,7 +13,7 @@ interface Props {
 
 const ProposalsBlock: FC<Props> = ({proposals, onApprove, onDeny, approvable = false, statusLoading}) => {
   return (
-    <div className={'mt-8'}>
+    <div className={'grow'}>
       <h3 className={'text-lg font-bold'}>{proposals.length} candidates</h3>
 
       <div className={'mt-4'}>
@@ -27,7 +27,7 @@ const ProposalsBlock: FC<Props> = ({proposals, onApprove, onDeny, approvable = f
                           photoURL={proposal.photoURL} approved={proposals.findIndex(e => e.approved) >= 0}
                           approvable={approvable} onDeny={onDeny}
                           onApprove={onApprove}/>
-                <hr/>
+                <hr className={'mt-4'}/>
               </div>
             ))
           )

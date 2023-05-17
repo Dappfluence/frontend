@@ -49,13 +49,13 @@ export async function populateCollaboration(doc: DocumentData): Promise<ICollabo
     id: doc.id,
     type: data.type || "POST",
     dates: {
-      start: data.deadline,
+      start: data.start,
       end: data.deadline
     },
     brand: await fetchBrand(data.creator),
     content: {
       title: data.title,
-      description: data.title
+      description: data.description
     },
     creator: data.creator,
     tags: [],

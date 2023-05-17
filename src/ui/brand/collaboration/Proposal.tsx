@@ -29,9 +29,20 @@ const Proposal: FC<Props> = ({
         onClick={() => navigate('/influencer/' + address)}>
         <img src={photoURL} alt={name}/>
       </div>
-      <div className={'grow ml-4 cursor-pointer'} onClick={() => navigate('/influencer/' + address)}>
+      <div className={'grow ml-4 flex flex-col gap-1 cursor-pointer'} onClick={() => navigate('/influencer/' + address)}>
         <h4 className={'text-base font-semibold'}>{name}</h4>
         <p className={'text-xs'}>{email}</p>
+        <div className={'flex gap-4'}>
+          <div>
+            <p className={'text-xs'}>Followers:</p>
+            <p className={'text-xs font-bold mt-1'}>2 256 985</p>
+          </div>
+          <div>
+            <p className={'text-xs'}>Account Age:</p>
+            <p className={'text-xs font-bold mt-1'}>3 years 11 months</p>
+          </div>
+        </div>
+        <p className={'text-base text-blue-700'}>View profile</p>
       </div>
       {approvable && <div className={'flex gap-2'}>
         <button className={'px-4 py-2 text-red-700 border border-red-700 rounded-xl'}
