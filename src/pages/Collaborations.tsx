@@ -1,19 +1,37 @@
-import React, {FC} from 'react';
+import React, {FC, useEffect} from 'react';
 import {populateCollaboration} from "../ui/collaborations/components/CollaborationCard.types";
 import {useQuery} from "@tanstack/react-query";
 import CollaborationCard from "../ui/collaborations/components/CollaborationCard";
 import {getDocs, collection, getFirestore} from 'firebase/firestore'
 import collaborationCard from "../ui/collaborations/components/CollaborationCard";
+import {fetchCollaborationStatus} from "../api/brand";
+import Web3 from "web3";
+import {useParticleProvider} from "@particle-network/connect-react-ui";
+import {ArrowPathIcon} from "@heroicons/react/24/outline";
 
 const Collaborations: FC = () => {
 
-  const {data = []} = useQuery({
+  const provider = useParticleProvider();
+
+  const {data = [], refetch, isLoading, isRefetching} = useQuery({
     queryKey: ['collaborations'],
     queryFn: async () => {
+      if (provider === undefined) return []
+      let web3 = new Web3(provider as any);
       let data = await getDocs(collection(getFirestore(), 'collaborations'))
-      return Promise.all(data.docs.map(e => populateCollaboration({id: e.id, ...e.data()})))
+      let collabs = await Promise.all(data.docs.map(e => populateCollaboration({id: e.id, ...e.data()})))
+      return Promise.all(collabs.map((e) => fetchCollaborationStatus(e, web3)))
     },
   })
+
+  useEffect(() => {
+    refetch()
+  }, [provider]);
+
+
+  if (isLoading || isRefetching) return <div className={'mt-[144px] container mx-auto'}>
+    <ArrowPathIcon className={'animate-spin h-10 w-10 mx-auto'}/>
+  </div>
 
   return (
     <div className={'mt-[144px] container mx-auto'}>
@@ -22,7 +40,8 @@ const Collaborations: FC = () => {
       </h1>
 
       <div className={'grid grid-cols-2 gap-4 py-5'}>
-        {data.map((collaboration, index) => <div key={index} className={'col-span-1'}>
+        {data.sort((a, b) => a.finished - b.finished).map((collaboration, index) => <div key={index}
+                                                                                         className={'col-span-1'}>
           <CollaborationCard collaboration={collaboration}/>
         </div>)}
       </div>

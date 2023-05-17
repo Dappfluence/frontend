@@ -434,7 +434,7 @@ const Collaboration: FC = () => {
                   ) : (
                     status.accepted ? (
                       <div>
-                        <h1>The collaboration has already began.</h1>
+                        <h1>The collaboration has already began or finished.</h1>
                       </div>
                     ) : proposals.some(proposal => proposal.address === account) ? (
                       <h1>Waiting for company representative to approve your participation. <br/>
