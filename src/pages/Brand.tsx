@@ -126,7 +126,7 @@ const Brand: FC = () => {
           {loading ? <ArrowPathIcon className={'w-6 h-6 animate-spin'}/> :
             collabs.length === 0 ?
               <p className={'text-gray-400'}>Here will be a detailed information about your active
-                collaborations</p> : collabs.filter((a) => a.accepted).map((collab, index) => <Collaboration
+                collaborations</p> : collabs.filter((a) => (a.accepted && !a.finished)).map((collab, index) => <Collaboration
                 collaboration={collab} key={index}/>)}
         </div>
       </Card>

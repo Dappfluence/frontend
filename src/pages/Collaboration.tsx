@@ -14,7 +14,7 @@ import {Button} from "flowbite-react";
 import ApplyForCollaborationModal from "../widgets/ApplyForCollaborationModal";
 import {toast} from "react-toastify";
 import {fetchInfluencer} from "../api/influencer";
-import {CheckCircleIcon, ClockIcon} from "@heroicons/react/24/outline";
+import {ArrowPathIcon, CheckCircleIcon, ClockIcon} from "@heroicons/react/24/outline";
 import UploadWorkModal from "../widgets/UploadWorkModal";
 
 
@@ -58,7 +58,9 @@ const Collaboration: FC = () => {
 
   const [status, setStatus] = useState<any>({finished: true});
 
+  const [statusLoading, setStatusLoading] = useState(false);
   const fetchStatus = async () => {
+    setStatusLoading(true)
     let web3 = new Web3(provider as any);
     // @ts-ignore
     const contract = new web3.eth.Contract(CollaborationABI, id);
@@ -72,6 +74,7 @@ const Collaboration: FC = () => {
       powProvided,
       finished
     })
+    setStatusLoading(false)
   }
   const [isApplicationModalOpen, setIsApplicationModalOpen] = useState(false);
   const [isProofModalOpen, setIsProofModalOpen] = useState(false);
@@ -122,12 +125,14 @@ const Collaboration: FC = () => {
     let web3 = new Web3(provider as any);
     // @ts-ignore
     const contract = new web3.eth.Contract(CollaborationABI, id);
-    setIsProofModalOpen(false)
+    setIsProofModalOpen(false);
     await toast.promise(async () => {
       try {
         await contract.methods.submitProofOfWork(data.proof).send({
           from: account,
         });
+        fetchStatus();
+
       } catch (e) {
         console.log(e)
       }
@@ -145,14 +150,21 @@ const Collaboration: FC = () => {
     }
   }, [provider])
 
+
+  const [proposalsLoading, setProposalsLoading] = useState(false);
+
   const fetchProposals = async () => {
+    setProposalsLoading(true);
     let web3 = new Web3(provider as any);
+
     // @ts-ignore
     const contract = new web3.eth.Contract(CollaborationABI, id);
     const proposals = await contract.methods.getProposals().call();
     let result = await Promise.all(proposals.map((e: any) => e[1]).map(fetchInfluencer))
 
     setProposals(result)
+    setProposalsLoading(false);
+
   }
   useEffect(() => {
     if (collaboration?.creator === account) {
@@ -167,7 +179,6 @@ const Collaboration: FC = () => {
       setIsCurrentUserParticipating(false);
     }
   }, [collaboration])
-
 
 
   const queryClient = useQueryClient();
@@ -190,8 +201,10 @@ const Collaboration: FC = () => {
         });
         await queryClient.invalidateQueries(['collaboration', id])
         await updateDoc(doc(getFirestore(), 'collaborations', id), {approved: a});
+
+        fetchStatus();
       } catch (e) {
-        console.log(e)
+        throw new Error((e as {message: string}).message);
       }
     }, {
       error: 'Error',
@@ -211,8 +224,9 @@ const Collaboration: FC = () => {
           from: account,
         });
         await queryClient.invalidateQueries(['collaboration', id])
+        fetchStatus();
       } catch (e) {
-        console.log(e)
+        throw new Error((e as {message: string}).message);
       }
     }, {
       error: 'Error',
@@ -222,41 +236,47 @@ const Collaboration: FC = () => {
   }
 
   const renderBrandFooter = () => {
+    if(statusLoading) {
+      return <ArrowPathIcon className={'w-6 h-6 animate-spin'}/>
+    }
+
     if (status.finished) {
       return <>
         <div>
           <p className={'text-xs'}>Proposals:</p>
           <h1 className={'text-lg font-bold'}>{proposals.length} Candidates</h1>
         </div>
-        <div className={'text-3xl text-sky-700 uppercase'}>
+        <div className={'text-xl text-green-600 flex gap-4 items-center'}>
+          <h1>The collaboration is finished</h1>
           <CheckCircleIcon className={'w-12 h-12'}/>
         </div>
       </>
     }
-    if (status.accepted && !status.powProvided) {
-      return <>
-        <div>
-          <p className={'text-xs'}>Proposals:</p>
-          <h1 className={'text-lg font-bold'}>{proposals.length} Candidates</h1>
-        </div>
-        <div className={'flex flex-row items-center gap-2'}>
-          <span>Waiting for work</span>
-          <ClockIcon className={'w-12 h-12 text-sky-700 animate-spin'}/>
-        </div>
+    if(status.accepted) {
+      if (!status.powProvided) {
+        return <>
+          <div>
+            <p className={'text-xs'}>Proposals:</p>
+            <h1 className={'text-lg font-bold'}>{proposals.length} Candidates</h1>
+          </div>
+          <div className={'flex flex-row items-center gap-2'}>
+            <span>Waiting for work</span>
+            <ClockIcon className={'w-12 h-12 text-sky-700 animate-spin'}/>
+          </div>
 
-      </>
-    }
-    if (status.accepted && status.powProvided) {
-      return <>
-        <div>
-          <p className={'text-xs'}>Proposals:</p>
-          <h1 className={'text-lg font-bold'}>{proposals.length} Candidates</h1>
-        </div>
-        <div className={'flex flex-row items-end gap-2'}>
-          <Button outline={true} color={'red'} onClick={() => alert('gfys')}>Request Changes</Button>
-          <Button onClick={handleApproveWork}>Approve Work</Button>
-        </div>
-      </>
+        </>
+      } else {
+        return <>
+          <div>
+            <p className={'text-xs'}>Proposals:</p>
+            <h1 className={'text-lg font-bold'}>{proposals.length} Candidates</h1>
+          </div>
+          <div className={'flex flex-row items-end gap-2'}>
+            <Button outline={true} color={'red'} onClick={() => alert('gfys')}>Request Changes</Button>
+            <Button onClick={handleApproveWork}>Approve Work</Button>
+          </div>
+        </>
+      }
     }
     return <>
       <div>
@@ -354,7 +374,7 @@ const Collaboration: FC = () => {
           {!isCurrentUserOwner ? (
             <RepresentativeBlock representatives={representatives}/>
           ) : (
-            <ProposalsBlock approvable={!status.finished && !status.inProgress && !status.accepted}
+            <ProposalsBlock statusLoading={statusLoading} approvable={!status.finished && !status.inProgress && !status.accepted}
                             onDeny={(a) => {
                               alert('deny ' + a)
                             }} onApprove={handleApprove} proposals={proposals}/>
@@ -386,45 +406,53 @@ const Collaboration: FC = () => {
                 <h1 className={'text-base font-bold'}>{collaboration.reward}tBNB</h1>
               </div>
               {
-                isCurrentUserParticipating ? (
-                  status.accepted && (
-                    status.powProvided ? (
-                      status.finished ? (
-                        <h1>The renumeration was sent to your wallet: {account}</h1>
+                statusLoading ? (
+                  <ArrowPathIcon className={'w-6 h-6 animate-spin'}/>
+                ) : (
+                  isCurrentUserParticipating ? (
+                    status.accepted && (
+                      status.powProvided ? (
+                        status.finished ? (
+                          <h1>The renumeration was sent to your wallet: {account}</h1>
+                        ) : (
+                          <h1>Waiting for company representative to review your work. <br/>You don’t need to do anything
+                            for now.</h1>
+                        )
                       ) : (
-                        <h1>Waiting for company representative to review your work. <br/>You don’t need to do anything
-                          for now.</h1>
+                        <div>
+                          <div className={'flex gap-2'}>
+                            <div>
+                              <p>Company representative approved your participation.</p>
+                              <p>Time left to upload your work: 1 month 25 days 14 hours</p>
+                            </div>
+                            <Button onClick={handleProofModalOpen}>Upload work</Button>
+                          </div>
+
+                          <UploadWorkModal collaborationAuthor={collaboration.brand.title}
+                                           isOpen={isProofModalOpen} onClose={handleProofModalClose}
+                                           onSubmit={handleUploadProofOfWork}/>
+                        </div>
                       )
+                    )
+                  ) : (
+                    status.accepted ? (
+                      <div>
+                        <h1>The collaboration has already began.</h1>
+                      </div>
+                    ) : proposals.some(proposal => proposal.address === account) ? (
+                      <h1>Waiting for company representative to approve your participation. <br/>
+                        You don’t need to do anything for now..</h1>
                     ) : (
                       <div>
-                        <div className={'flex gap-2'}>
-                          <div>
-                            <p>Company representative approved your participation.</p>
-                            <p>Time left to upload your work: 1 month 25 days 14 hours</p>
-                          </div>
-                          <Button onClick={handleProofModalOpen}>Upload work</Button>
-                        </div>
-
-                        <UploadWorkModal collaborationAuthor={collaboration.brand.title}
-                                         isOpen={isProofModalOpen} onClose={handleProofModalClose}
-                                         onSubmit={handleUploadProofOfWork}/>
+                        <Button onClick={handleApplicationModalOpen}>Apply for this collaboration</Button>
+                        <ApplyForCollaborationModal collaborationAuthor={collaboration.brand.title}
+                                                    isOpen={isApplicationModalOpen}
+                                                    onClose={handleApplicationModalClose}
+                                                    onSubmit={handleApplicationModalSubmit}/>
                       </div>
                     )
-                  )
-                ) : (
-                  status.accepted ? (
-                    <div>
-                      <h1>The collaboration has already began.</h1>
-                    </div>
-                  ) : (
-                    <div>
-                      <Button onClick={handleApplicationModalOpen}>Apply for this collaboration</Button>
-                      <ApplyForCollaborationModal collaborationAuthor={collaboration.brand.title}
-                                                  isOpen={isApplicationModalOpen} onClose={handleApplicationModalClose}
-                                                  onSubmit={handleApplicationModalSubmit}/>
-                    </div>
-                  )
 
+                  )
                 )
               }
 
