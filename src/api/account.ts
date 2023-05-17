@@ -3,8 +3,8 @@ import {TAccountType} from "../shared/types/account";
 import {ICollaboration, populateCollaboration} from "../ui/collaborations/components/CollaborationCard.types";
 
 
-export const getType = async (address: string | undefined): Promise<TAccountType> => {
-  if (!address) return "unknown";
+export const getType = async (address: string | undefined): Promise<TAccountType | undefined> => {
+  if (!address) return undefined;
   let data = await getDoc(doc(getFirestore(), "accounts", address));
   if (data.exists()) {
     return data.get("type");
@@ -21,6 +21,15 @@ export const getDisplayName = async (address: string | undefined): Promise<strin
   return "";
 }
 
+export const getBrandWebsite = async (address: string | undefined): Promise<string> => {
+  if (!address) return "";
+  let data = await getDoc(doc(getFirestore(), "accounts", address));
+  if (data.exists()) {
+    return data.get("website");
+  }
+  return "";
+}
+
 
 export const setType = async (address: string, type: TAccountType) => {
   let document = doc(getFirestore(), "accounts", address);
@@ -30,6 +39,11 @@ export const setType = async (address: string, type: TAccountType) => {
 export const setDisplayName = async (address: string, displayName: string) => {
   let document = doc(getFirestore(), "accounts", address);
   await updateDoc(document, { displayName });
+}
+
+export const setBrandWebsite = async (address: string, website: string) => {
+  let document = doc(getFirestore(), "accounts", address);
+  await updateDoc(document, { website });
 }
 
 

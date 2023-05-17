@@ -45,7 +45,6 @@ dayjs.extend(relativeTime);
 
 const InfluencerProfile: FC = () => {
   const {address} = useParams();
-  console.log(address)
   const account = address ?? useAccount();
   const {data: user} = useQuery<{}, unknown, IInfluencer>({
     queryKey: ['influencer', account],

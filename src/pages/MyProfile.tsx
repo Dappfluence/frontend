@@ -1,18 +1,21 @@
-import React, {FC, useEffect} from "react";
+import React, {FC, useEffect, useState} from "react";
 import {useAccountInfo} from "@particle-network/connect-react-ui";
 import {useMutation, useQuery} from "@tanstack/react-query";
 import {TAccountType} from "../shared/types/account";
-import {getType, setDisplayName, setType} from "../api/account";
+import {getType, setBrandWebsite, setDisplayName, setType} from "../api/account";
 import InfluencerProfile from "./InfluencerProfile";
 import Brand from "./Brand";
-import {Modal} from "flowbite-react";
 import {useNavigate} from "react-router-dom";
+import {RegisterModal} from "../ui/profile/component";
+
 
 export const MyProfile: FC = () => {
+  const [step, setStep] = useState(1);
+  const [intermediateType, setIntermediateType] = useState<TAccountType | null>(null);
 
   const {accountLoading, account} = useAccountInfo()
 
-  const {data: type = 'unknown', refetch} = useQuery<unknown, unknown, TAccountType>({
+  const {data: type, refetch, isLoading} = useQuery<unknown, unknown, TAccountType>({
     queryKey: ['accountType'],
     queryFn: async () => getType(account!)
   })
@@ -27,7 +30,7 @@ export const MyProfile: FC = () => {
         refetch()
       }
     }
-  }, [accountLoading])
+  }, [accountLoading]);
 
   const {mutate} = useMutation<unknown, unknown, TAccountType>({
     mutationKey: ['accountType'],
@@ -38,45 +41,40 @@ export const MyProfile: FC = () => {
     mutationKey: ['displayName'],
     mutationFn: async (displayName: string) => setDisplayName(account!, displayName)
   })
+  const {mutate: websiteMutate} = useMutation<unknown, unknown, string>({
+    mutationKey: ['brandWebsite'],
+    mutationFn: async (website: string) => setBrandWebsite(account!, website)
+  })
 
-  const handleChoice = async (mutationOption: TAccountType) => {
-    await mutate(mutationOption);
-    await nameMutate("123");
-    await refetch();
+  const handleTypeChoice = (type: TAccountType) => {
+    setIntermediateType(type);
+    if(type === 'influencer') {
+      setStep(2);
+    } else if(type === 'brand') {
+      setStep(3);
+    }
   }
 
 
-  if (accountLoading) return <div>Loading...</div>
+  const handleSubmit = async (name: string, website?: string) => {
+    console.log(website)
+    if(intermediateType) {
+      await mutate(intermediateType);
+    }
+    await nameMutate(name);
+    if(website) {
+      await websiteMutate(website);
+    }
+
+    await refetch();
+  }
+
+  if (accountLoading || isLoading) return <div>Loading...</div>
 
   if (type === 'brand') return <Brand/>
   if (type === 'influencer') return <InfluencerProfile/>
+
   return (
-    <Modal
-      show={true}
-      size="md"
-      popup={true}
-    >
-      <Modal.Body className={'bg-white'}>
-        <div className="text-center p-8 pt-12">
-          <h3 className="mb-8 text-3xl font-thin">
-            Who are you?
-          </h3>
-          <div className="flex justify-center gap-4">
-            <button
-              className={'py-2 px-4 text-blue-700 border border-blue-700 rounded-xl'}
-              onClick={() => handleChoice('brand')}
-            >
-              Brand
-            </button>
-            <button
-              className={'py-2 px-4 text-green-700 border border-green-700 rounded-xl'}
-              onClick={() => handleChoice('influencer')}
-            >
-              Influencer
-            </button>
-          </div>
-        </div>
-      </Modal.Body>
-    </Modal>
+    <RegisterModal type={type} step={step} handleTypeChoice={handleTypeChoice} handleSubmit={handleSubmit} />
   )
 }

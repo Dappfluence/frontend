@@ -18,7 +18,7 @@ const BrandCard: FC<IProps> = ({children, image, title, link, className = ''}) =
       </div>
       <div className={'flex flex-col gap-1'}>
         <span className={'text-sm'}>Company Link</span>
-        <a className={'text-xl text-sky-600 font-bold'}>{link}</a>
+        <a href={link} className={'text-xl text-sky-600 font-bold'}>{link}</a>
       </div>
       <PencilIcon className={'w-6 h-6 opacity-40'}/>
     </Card>
