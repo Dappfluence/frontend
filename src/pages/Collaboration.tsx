@@ -109,6 +109,7 @@ const Collaboration: FC = () => {
         await contract.methods.createProposal(data.skills).send({
           from: account,
         });
+        await fetchStatus();
       } catch (e) {
         console.log(e)
       }
@@ -151,10 +152,8 @@ const Collaboration: FC = () => {
   }, [provider])
 
 
-  const [proposalsLoading, setProposalsLoading] = useState(false);
 
   const fetchProposals = async () => {
-    setProposalsLoading(true);
     let web3 = new Web3(provider as any);
 
     // @ts-ignore
@@ -163,8 +162,6 @@ const Collaboration: FC = () => {
     let result = await Promise.all(proposals.map((e: any) => e[1]).map(fetchInfluencer))
 
     setProposals(result)
-    setProposalsLoading(false);
-
   }
   useEffect(() => {
     if (collaboration?.creator === account) {
